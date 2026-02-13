@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand Colors */
+  --color-jiffy-dark: #1c2431;
+  --color-jiffy-cream: #f5ebe0;
+  --color-jiffy-purple: #7c3aed;
+  --color-whatsapp: #25D366;
+
+  /* Theme Mapping */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  /* Typography */
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Custom Animations - Standard Tailwind v4 Syntax */
+  --keyframes-marquee: {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  
+  --animation-marquee: marquee 10s linear infinite;
+  --animation-marquee-slow: marquee 40s linear infinite;
+}
+
+/* --- Base Layers --- */
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* Fix for Sanity Studio & Page Scrolling */
+html, body {
+  height: auto !important; 
+  overflow-y: auto !important;
+  min-height: 100vh;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Custom Utilities & Components --- */
+
+@layer utilities {
+  /* Marquee Logic */
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: var(--animation-marquee);
+  }
+
+  .animate-marquee-slow {
+    display: flex;
+    width: max-content;
+    animation: var(--animation-marquee-slow);
+  }
+
+  .animate-marquee:hover,
+  .animate-marquee-slow:hover {
+    animation-play-state: paused;
+  }
+
+  /* Template Carousel / Slider */
+  .templates-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 0 10%;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .templates-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  .template-item {
+    flex: 0 0 auto;
+    width: 70%;
+    max-width: 800px;
+    scroll-snap-align: center;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .template-item.active {
+    transform: scale(1.05);
+    z-index: 10;
+  }
+}
