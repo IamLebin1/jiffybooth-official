@@ -8,15 +8,11 @@ const nextConfig = {
       },
     ],
   },
-  // ADD THIS SECTION TO BYPASS THE ERROR:
   typescript: {
-    // This allows production builds to successfully complete even if
-    // your project has type errors.
+    // This forces Vercel to ignore ALL type errors and just build the site
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Warning: This allows production builds to successfully complete even if
-    // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
 };
