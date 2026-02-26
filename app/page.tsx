@@ -99,65 +99,67 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
       
-      {/* --- HERO SECTION: DYNAMIC BACKGROUND --- */}
-      <section className="relative w-full min-h-[100vh] flex items-center bg-white overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          {/* LOGIC: Check background type from Sanity */}
-          {pageData.heroBackgroundType === 'video' && pageData.heroVideoUrl ? (
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover opacity-15"
-            >
-              <source src={pageData.heroVideoUrl} type="video/mp4" />
-            </video>
-          ) : (
-            <Image 
-              src={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"} 
-              alt="Hero Background"
-              fill
-              className="object-cover opacity-10" 
-              priority
-            />
-          )}
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20">
-          <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500">
-            {pageData.heroImage && (
+        {/* --- HERO SECTION: DYNAMIC BACKGROUND --- */}
+        <section className="relative w-full min-h-[100vh] flex items-center bg-white overflow-hidden">
+          <div className="absolute inset-0 z-0">
+            {pageData.heroBackgroundType === 'video' && pageData.heroVideoUrl ? (
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="absolute inset-0 w-full h-full object-cover opacity-15"
+              >
+                <source src={pageData.heroVideoUrl} type="video/mp4" />
+              </video>
+            ) : (
               <Image 
-                src={urlFor(pageData.heroImage).url()}
-                alt="Photo Strip"
-                width={400}
-                height={700}
-                className="h-auto w-[41vw] max-w-[260px] md:w-64"
+                src={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"} 
+                alt="Hero Background"
+                fill
+                className="object-cover opacity-10" 
+                priority
               />
             )}
           </div>
 
-          <div className="flex flex-col items-center md:items-end text-center md:text-right">
-            {pageData.heroLogo && (
-              <div className="flex -mb-2 justify-center md:justify-end w-full">
+          <div className="relative z-10 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20">
+            
+            <div className="flex flex-col items-center md:items-end text-center md:text-right order-1 md:order-2">
+              {pageData.heroLogo && (
+                <div className="flex -mb-2 justify-center md:justify-end w-full">
+                  <Image 
+                    src={urlFor(pageData.heroLogo).url()}
+                    alt="Jiffy Logo"
+                    width={300}
+                    height={150}
+                    className="h-auto w-24 md:w-40 object-contain"
+                  />
+                </div>
+              )}
+              <h1 className="text-jiffy-dark font-bold leading-[0.7] tracking-tighter text-5xl md:text-[clamp(60px,8vw,120px)] ">
+                {pageData.heroTitle || "Jiffy Booth"}
+              </h1>
+              <p className="text-jiffy-dark mt-6 font-light tracking-widest max-w-md text-base md:text-[clamp(18px,1.5vw,20px)] ">
+                {pageData.heroBio || "Capturing a jiffy that lasts forever"}
+              </p>
+            </div>
+
+            
+            <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500 order-2 md:order-1">
+              {pageData.heroImage && (
                 <Image 
-                  src={urlFor(pageData.heroLogo).url()}
-                  alt="Jiffy Logo"
-                  width={300}
-                  height={150}
-                  className="h-auto w-24 md:w-40 object-contain"
+                  src={urlFor(pageData.heroImage).url()}
+                  alt="Photo Strip"
+                  width={400}
+                  height={700}
+                  className="h-auto w-[41vw] max-w-[260px] md:w-64"
                 />
-              </div>
-            )}
-            <h1 className="text-jiffy-dark font-bold leading-[0.7] tracking-tighter text-5xl md:text-[clamp(60px,8vw,120px)] ">
-              {pageData.heroTitle || "Jiffy Booth"}
-            </h1>
-            <p className="text-jiffy-dark mt-6 font-light tracking-widest max-w-md text-base md:text-[clamp(18px,1.5vw,20px)] ">
-              {pageData.heroBio || "Capturing a jiffy that lasts forever"}
-            </p>
+              )}
+            </div>
+
           </div>
-        </div>
-      </section>
+        </section>
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-12 scroll-mt-24 bg-slate-50">
