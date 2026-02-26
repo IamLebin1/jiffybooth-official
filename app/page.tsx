@@ -47,7 +47,10 @@ export default function Home() {
             }
           }`, 
           {}, 
-          { cache: 'no-store' }
+          { 
+            next: { revalidate: 0 },
+            cache: 'no-store' 
+          }
         );
         setPageData(data);
       } catch (error) {
@@ -129,7 +132,7 @@ export default function Home() {
                 alt="Photo Strip"
                 width={400}
                 height={700}
-                className="h-auto w-80 md:w-64"
+                className="h-auto w-[40vw] max-w-[260px] md:w-64"
               />
             )}
           </div>
@@ -168,7 +171,7 @@ export default function Home() {
           <div className="glide__track overflow-visible" data-glide-el="track">
             <ul className="glide__slides items-center min-h-[450px] md:min-h-[500px]">
               {pageData.templates?.map((item: any, index: number) => (
-                <li key={index} className="glide__slide flex justify-center items-center">
+                <li key={index} className="glide__slide flex justify-center items-center px-4 md:px-0">
                   <div className="template-container transition-all duration-500">
                     {item.designImage && (
                       <img 

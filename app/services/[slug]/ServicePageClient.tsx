@@ -89,12 +89,12 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
 
   const isValidSrc = (src: any) => src && typeof src === 'string' && src.trim() !== "";
 
-  const getIconForFeature = (iconName: string) => {
-    const IconName = iconName.charAt(0).toUpperCase() + iconName.slice(1).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-    // @ts-ignore
-    const Icon = LucideIcons[IconName] || LucideIcons.Camera;
-    return <Icon className="w-12 h-12" />;
-  };
+  const getIconForFeature = (iconName: string, className = "w-7 h-7 lg:w-12 lg:h-12") => {
+  const IconName = iconName.charAt(0).toUpperCase() + iconName.slice(1).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+  // @ts-ignore
+  const Icon = LucideIcons[IconName] || LucideIcons.Camera;
+  return <Icon className={className} />;
+};
 
   const getVideoEmbedUrl = (url: string) => {
     if (!url) return "";
@@ -187,16 +187,16 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
               What We Provide
             </h2>
             
-            <div className="flex flex-wrap justify-center gap-x-8 gap-y-16">
-              {features.map((feature, idx) => (
-                <div 
-                  key={idx} 
-                  className="flex flex-col items-center text-center space-y-6 group w-[220px]"
-                >
-                  <div className="w-28 h-28 rounded-full bg-slate-800 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl text-white">
+            <div className="grid grid-cols-3 lg:flex lg:flex-wrap justify-center gap-x-4 gap-y-10 lg:gap-x-8 lg:gap-y-16">
+  {features.map((feature, idx) => (
+    <div 
+      key={idx} 
+      className="flex flex-col items-center text-center space-y-4 lg:space-y-6 group lg:w-[220px]"
+    >
+<div className="w-16 h-16 lg:w-28 lg:h-28 rounded-full bg-slate-800 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl text-white">
                     {getIconForFeature(feature.iconName)}
                   </div>
-                  <h3 className="text-xl font-semibold leading-snug text-slate-800 tracking-tight">
+<h3 className="text-s lg:text-xl font-semibold leading-snug text-slate-800 tracking-tight">
                     {feature.title}
                   </h3>
                 </div>
@@ -533,7 +533,7 @@ function AddOnsSection({ section, isValidSrc }: { section: Section; isValidSrc: 
           {section.title || 'Optional Add-Ons'}
         </h2>
         {section.addOns && section.addOns.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+<div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
             {section.addOns.map((addon, idx) => (
               <div key={idx} className="group cursor-pointer">
                 <div className="aspect-[4/5] rounded-3xl mb-6 overflow-hidden shadow-lg transition-all duration-500 group-hover:rounded-2xl transform group-hover:scale-[0.98] relative bg-white">
