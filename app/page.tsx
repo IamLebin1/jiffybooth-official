@@ -132,7 +132,7 @@ export default function Home() {
                 alt="Photo Strip"
                 width={400}
                 height={700}
-                className="h-auto w-[40vw] max-w-[260px] md:w-64"
+                className="h-auto w-[41vw] max-w-[260px] md:w-64"
               />
             )}
           </div>
