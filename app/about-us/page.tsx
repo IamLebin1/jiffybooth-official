@@ -10,7 +10,7 @@ const client = createClient({
   projectId: "g8867hcl", 
   dataset: "production",
   apiVersion: "2024-01-01",
-  useCdn: false, // Set to false for "live" updates
+  useCdn: true, // Set to false for "live" updates
 });
 
 // --- 2. IMAGE URL BUILDER ---

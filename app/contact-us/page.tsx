@@ -9,7 +9,7 @@ const client = createClient({
   projectId: "g8867hcl", 
   dataset: "production",
   apiVersion: "2024-01-01",
-  useCdn: false,
+  useCdn: true,
 });
 
 export default function ContactPage() {
