@@ -210,14 +210,14 @@ export default function Home() {
             </ul>
           </div>
 
-          <div className="glide__arrows pointer-events-none absolute inset-0 flex items-center justify-between px-4 md:px-20 z-20" data-glide-el="controls">
-            <button className="glide__arrow pointer-events-auto p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
-              <svg className="w-3 h-3 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
-            </button>
-            <button className="glide__arrow pointer-events-auto p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
-              <svg className="w-3 h-3 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
-            </button>
-          </div>
+          <div className="glide__arrows" data-glide-el="controls">
+  <button className="glide__arrow glide__arrow--left p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
+    <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button className="glide__arrow glide__arrow--right p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
+    <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
 
           <div className="glide__bullets flex justify-center items-center gap-3 mt-12" data-glide-el="controls[nav]">
             {pageData.templates?.map((_: any, index: number) => (
@@ -368,6 +368,33 @@ export default function Home() {
           background-color: #1F2937 !important;
         }
         .glide__bullet:hover { background-color: #9ca3af; }
+
+        /* Desktop arrows: float over the slider */
+.glide__arrows {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5rem;
+  z-index: 20;
+}
+.glide__arrows button {
+  pointer-events: auto;
+}
+
+/* Mobile arrows: sit below the slide, centered */
+@media (max-width: 768px) {
+  .glide__arrows {
+    position: relative;
+    inset: auto;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 0;
+    margin-top: 1.5rem;
+  }
+}
 
         /* INFINITE MARQUEE Range Adjustment */
         @keyframes marquee { 

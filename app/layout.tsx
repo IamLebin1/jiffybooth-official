@@ -204,7 +204,7 @@ export default function RootLayout({
         <header className="bg-jiffy-dark sticky top-0 z-[100] w-full shadow-md">
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
-              <div className="w-16 h-16 md:w-20 md:h-20 relative flex items-center justify-center">
+              <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
                 <img src={logoUrl} alt="Jiffy Logo" className="object-contain" />
               </div>
             </Link>
@@ -233,14 +233,14 @@ export default function RootLayout({
 
           {isMenuOpen && (
             <nav className="md:hidden bg-jiffy-dark border-t border-gray-700 absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
-              <ul className="flex flex-col p-6 space-y-4">
+              <ul className="flex flex-col p-4 space-y-2">
                 {/* FIXED: Added ': any' to link parameter here as well */}
                 {navLinks.map((link: any) => (
                   <li key={link.href}>
                     <Link 
                       href={link.href} 
                       onClick={() => setIsMenuOpen(false)} 
-                      className="text-white text-lg font-bold block border-b border-gray-800 pb-2 active:text-blue-300"
+                      className="text-white text-lg（14px) font-bold block border-b border-gray-800 pb-1.5 active:text-blue-300"
                     >
                       {link.name}
                     </Link>
@@ -292,7 +292,7 @@ export default function RootLayout({
         </div>
 
         {/* --- FOOTER SECTION --- */}
-        <footer className="bg-jiffy-dark text-white py-20 px-6 mt-auto">
+        <footer className="bg-jiffy-dark text-white py-12 px-6 mt-auto">
           <div className="max-w-7xl mx-auto">
             <div className={`flex flex-col lg:flex-row gap-16 ${isContactPage ? 'justify-between' : ''}`}>
               
