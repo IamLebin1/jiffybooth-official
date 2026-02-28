@@ -421,97 +421,132 @@ function BackdropSection({ section, isValidSrc }: { section: Section; isValidSrc
 
 // Templates Section Component
 function TemplatesSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  const animationRef = useRef<number>();
+  const autoScrollSpeed = useRef(1);
+  const isPaused = useRef(false);
 
-  const handleScroll = () => {
-    if (scrollRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-      const progress = (scrollLeft / (scrollWidth - clientWidth)) * 100;
-      setScrollProgress(progress);
-    }
-  };
-
-  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    setScrollProgress(value);
-    if (scrollRef.current) {
-      const { scrollWidth, clientWidth } = scrollRef.current;
-      scrollRef.current.scrollLeft = (value / 100) * (scrollWidth - clientWidth);
-    }
-  };
-
-  const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor 
-    ? section.customBackgroundColor 
+  const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor
+    ? section.customBackgroundColor
     : section.backgroundColor || '#FFFFFF';
 
-  return (
-    <section 
-      className="py-24 px-6"
-      style={{ backgroundColor: bgColor }}
-    >
-      <div className="max-w-6xl mx-auto">
-        <div className="space-y-8 pt-12">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl md:text-4xl font-bold mb-2 text-slate-800 tracking-tight">
-              {section.title || 'Customisable Templates'}
-            </h3>
-            {section.subtitle && (
-              <p className="text-gray-500 text-lg max-w-xl mx-auto font-light">
-                {section.subtitle}
-              </p>
-            )}
-          </div>
+  // Auto-scroll loop
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
 
-          {section.templates && section.templates.length > 0 && (
-            <div className="relative space-y-6">
-              <div 
-                ref={scrollRef}
-                onScroll={handleScroll}
-                className="flex gap-6 overflow-x-auto pb-4 snap-x scroll-smooth"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-              >
-                <style jsx>{`
-                  div::-webkit-scrollbar { display: none; }
-                `}</style>
-                {section.templates.map((template, i) => (
-                  <div key={i} className="flex-shrink-0 snap-center">
-                    <div className="relative h-[350px] md:h-[450px] rounded-2xl shadow-lg border-8 border-white overflow-hidden bg-white">
-                      {isValidSrc(template) ? (
-                        <Image 
-                          src={template}
-                          alt={`Template ${i + 1}`}
-                          width={400}
-                          height={600}
-                          className="h-full w-auto object-contain"
-                        />
-                      ) : (
-                        <div className="h-full aspect-[3/4] bg-gray-50 flex items-center justify-center text-gray-300">
-                          Template Image
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-              
-              <div className="w-full max-w-2xl mx-auto px-2">
-                <input 
-                  type="range" 
-                  min="0" 
-                  max="100" 
-                  value={scrollProgress} 
-                  onChange={handleSliderChange}
-                  className="w-full h-1.5 bg-gray-200 rounded-full appearance-none cursor-pointer
-                    [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-6 
-                    [&::-webkit-slider-thumb]:bg-slate-800 [&::-webkit-slider-thumb]:rounded-full 
-                    [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:transition-transform 
-                    [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:cursor-pointer"
+    const scroll = () => {
+      if (!isPaused.current && track) {
+        track.scrollLeft += autoScrollSpeed.current;
+        // When we've scrolled halfway (one full set), reset to start for seamless loop
+        if (track.scrollLeft >= track.scrollWidth / 2) {
+          track.scrollLeft = 0;
+        }
+      }
+      animationRef.current = requestAnimationFrame(scroll);
+    };
+
+    animationRef.current = requestAnimationFrame(scroll);
+    return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current); };
+  }, []);
+
+  // Drag to scroll
+  const onMouseDown = (e: React.MouseEvent) => {
+    isDragging.current = true;
+    isPaused.current = true;
+    startX.current = e.pageX - (trackRef.current?.offsetLeft || 0);
+    scrollLeft.current = trackRef.current?.scrollLeft || 0;
+    if (trackRef.current) trackRef.current.style.cursor = 'grabbing';
+  };
+
+  const onMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - trackRef.current.offsetLeft;
+    const walk = (x - startX.current) * 1.5;
+    trackRef.current.scrollLeft = scrollLeft.current - walk;
+  };
+
+  const onMouseUp = () => {
+    isDragging.current = false;
+    if (trackRef.current) trackRef.current.style.cursor = 'grab';
+    setTimeout(() => { isPaused.current = false; }, 800);
+  };
+
+  // Touch support
+  const onTouchStart = (e: React.TouchEvent) => {
+    isPaused.current = true;
+    startX.current = e.touches[0].pageX;
+    scrollLeft.current = trackRef.current?.scrollLeft || 0;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    if (!trackRef.current) return;
+    const walk = (startX.current - e.touches[0].pageX) * 1.5;
+    trackRef.current.scrollLeft = scrollLeft.current + walk;
+  };
+
+  const onTouchEnd = () => {
+    setTimeout(() => { isPaused.current = false; }, 800);
+  };
+
+  if (!section.templates || section.templates.length === 0) return null;
+
+  // Duplicate templates for seamless loop
+  const loopedTemplates = [...section.templates, ...section.templates];
+
+  return (
+    <section className="py-24 overflow-hidden" style={{ backgroundColor: bgColor }}>
+      <div className="max-w-6xl mx-auto px-6 mb-12 text-center">
+        <h3 className="text-2xl md:text-4xl font-bold mb-2 text-slate-800 tracking-tight">
+          {section.title || 'Customisable Templates'}
+        </h3>
+        {section.subtitle && (
+          <p className="text-gray-500 text-lg max-w-xl mx-auto font-light">{section.subtitle}</p>
+        )}
+        <p className="text-gray-400 text-sm mt-3 tracking-wide">Drag to explore →</p>
+      </div>
+
+      <div
+        ref={trackRef}
+        className="flex gap-6 overflow-x-auto select-none"
+        style={{
+          scrollbarWidth: 'none',
+          msOverflowStyle: 'none',
+          cursor: 'grab',
+          WebkitOverflowScrolling: 'touch',
+        }}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
+        <style jsx>{`div::-webkit-scrollbar { display: none; }`}</style>
+
+        {loopedTemplates.map((template, i) => (
+          <div key={i} className="flex-shrink-0 pl-4 first:pl-6 last:pr-6">
+            <div className="h-[320px] md:h-[420px] rounded-2xl shadow-lg border-8 border-white overflow-hidden bg-white pointer-events-none">
+              {isValidSrc(template) ? (
+                <img
+                  src={template}
+                  alt={`Template ${(i % section.templates!.length) + 1}`}
+                  className="h-full w-auto object-contain"
+                  draggable={false}
                 />
-              </div>
+              ) : (
+                <div className="h-full aspect-[3/4] bg-gray-50 flex items-center justify-center text-gray-300 text-sm">
+                  Template
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   );

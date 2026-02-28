@@ -26,10 +26,10 @@ export default async function TermsOfService() {
   }
 
   return (
-    <main className="min-h-screen bg-white font-inter text-[#1c2431] pb-40">
+    <main className="min-h-screen bg-white font-inter text-[#1c2431] pb-10">
       
       {/* --- HEADER SECTION --- */}
-      <section className="bg-[#2c343f] pt-48 pb-24 px-6 text-center">
+      <section className="bg-[#2c343f] pt-10 pb-10 px-6 text-center">
         <h1 className="text-white text-5xl md:text-7xl font-bold tracking-tighter uppercase italic">
           {data.title}
         </h1>
@@ -37,7 +37,7 @@ export default async function TermsOfService() {
       </section>
 
       {/* --- CONTENT SECTION --- */}
-      <section className="max-w-4xl mx-auto py-24 px-6 space-y-20">
+      <section className="max-w-4xl mx-auto pt-12 pb-2 px-6 space-y-4 md:space-y-12">
         <div className="space-y-4">
           <p className="text-gray-500 text-lg md:text-xl leading-relaxed italic opacity-80">
             Last Updated: {data.lastUpdated || 'January 2026'}
@@ -47,7 +47,7 @@ export default async function TermsOfService() {
           </p>
         </div>
 
-        <div className="space-y-16">
+        <div className="space-y-12">
           {data.sections?.map((item: any, index: number) => (
             <div key={index} className="space-y-6">
               <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#1c2431] uppercase">
@@ -62,7 +62,7 @@ export default async function TermsOfService() {
         </div>
 
         {/* --- CONTACT FOOTER --- */}
-        <div className="pt-20 border-t border-gray-100 text-center space-y-4">
+        <div className="pt-15 border-t border-gray-100 text-center space-y-4">
           <p className="text-gray-400 text-lg uppercase tracking-widest font-bold">Questions?</p>
           <p className="text-[#1c2431] text-2xl font-bold underline decoration-[#5a87b3] decoration-4 underline-offset-8">
             hello@jiffybooth.com

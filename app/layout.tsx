@@ -218,15 +218,16 @@ export default function RootLayout({
               ))}
             </nav>
 
-            <button 
+              <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="md:hidden text-white p-2 focus:outline-none"
+              className="md:hidden text-white p-2 focus:outline-none transition-transform duration-300 active:scale-90"
+              style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
               aria-label="Toggle Menu"
             >
               {isMenuOpen ? (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                <svg className="animate-in zoom-in-50 duration-300" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               ) : (
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+                <svg className="animate-in zoom-in-50 duration-300" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
               )}
             </button>
           </div>
@@ -437,8 +438,7 @@ export default function RootLayout({
 
                       <button 
                         type="submit"
-                        className="w-full bg-jiffy-dark text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98]"
-                      >
+className="w-full bg-jiffy-dark text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-normal text-sm hover:bg-black transition-all active:scale-[0.98]"                      >
                         {status === 'success' ? 'Opening WhatsApp...' : 'Submit via WhatsApp'}
                       </button>
                     </form>

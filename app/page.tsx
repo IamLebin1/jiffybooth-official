@@ -26,7 +26,6 @@ function urlFor(source: any) {
   return builder.image(source);
 }
 
-// REMOVED: Hardcoded BRANDS array — now fetched from Sanity via pageData.brands
 
 export default function Home() {
   const glideRef = useRef(null);
@@ -168,7 +167,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500 order-2 md:order-1">
+            <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500 order-2 md:order-1 -mt-8 md:mt-0">
               {pageData.heroImage && (
                 <Image 
                   src={urlFor(pageData.heroImage).url()}
@@ -185,8 +184,7 @@ export default function Home() {
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6 mb-16 flex justify-center">
-          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
+<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
             Our Templates
           </h2>
         </div>
