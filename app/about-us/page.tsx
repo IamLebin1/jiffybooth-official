@@ -50,7 +50,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
 
       {/* --- 1. THE TEAM BEHIND SECTION --- */}
-      <section className="max-w-7xl mx-auto pt-32 md:pt-48 pb-60 px-8 flex flex-col lg:flex-row items-center gap-16">
+      <section className="max-w-7xl mx-auto pt-8 md:pt-32 pb-60 px-8 flex flex-col lg:flex-row items-center gap-16">
         
         {/* Text Content */}
         <div className="flex-1 space-y-8 text-center lg:text-left z-10">
