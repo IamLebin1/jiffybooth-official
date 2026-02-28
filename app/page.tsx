@@ -70,9 +70,8 @@ export default function Home() {
         focusAt: 'center',
         perView: 3,
         gap: 120, 
-        autoplay: 4000,
-        animationDuration: 200, 
-        throttle: 10,           
+        autoplay: false, 
+        animationDuration: 500, 
         animationTimingFunc: 'cubic-bezier(0.165, 0.84, 0.44, 1)', 
         breakpoints: {
           1024: { perView: 2, gap: 180 }, 
@@ -80,11 +79,34 @@ export default function Home() {
         }
       });
 
+      let moveDirection = '>'; 
+      let autoplayTimer: NodeJS.Timeout;
+
+      
+      const startCustomAutoplay = () => {
+        clearInterval(autoplayTimer);
+        autoplayTimer = setInterval(() => {
+          
+          glide.go(moveDirection); 
+        }, 4000); 
+      };
+
+      
+      glide.on('run.before', (move: any) => {
+        if (move.direction === '<' || move.direction === '>') {
+          moveDirection = move.direction; 
+          startCustomAutoplay(); 
+        }
+      });
+
       glide.mount();
+      startCustomAutoplay(); 
+      
       const handleResize = () => glide.update();
       window.addEventListener('resize', handleResize);
       
       return () => {
+        clearInterval(autoplayTimer);
         glide.destroy();
         window.removeEventListener('resize', handleResize);
       };
@@ -100,7 +122,7 @@ export default function Home() {
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
       
         {/* --- HERO SECTION: DYNAMIC BACKGROUND --- */}
-        <section className="relative w-full min-h-[100vh] flex items-center bg-white overflow-hidden">
+        <section className="relative w-full min-h-[80vh] md:min-h-screen flex items-center bg-white overflow-hidden">
           <div className="absolute inset-0 z-0">
             {pageData.heroBackgroundType === 'video' && pageData.heroVideoUrl ? (
               <video
@@ -126,26 +148,26 @@ export default function Home() {
           <div className="relative z-10 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20">
             
             <div className="flex flex-col items-center md:items-end text-center md:text-right order-1 md:order-2">
-              {pageData.heroLogo && (
-                <div className="flex -mb-2 justify-center md:justify-end w-full">
-                  <Image 
-                    src={urlFor(pageData.heroLogo).url()}
-                    alt="Jiffy Logo"
-                    width={300}
-                    height={150}
-                    className="h-auto w-24 md:w-40 object-contain"
-                  />
-                </div>
-              )}
+              <div className="flex -mb-2 justify-center md:justify-end w-full">
+                <Image 
+
+                  src={pageData?.heroLogo ? urlFor(pageData.heroLogo).url() : "/jiffy-logo.png"} 
+                  alt="Jiffy Logo"
+                  width={300}
+                  height={150}
+                  className="h-auto w-24 md:w-40 object-contain"
+                />
+              </div>
+              
               <h1 className="text-jiffy-dark font-bold leading-[0.7] tracking-tighter text-5xl md:text-[clamp(60px,8vw,120px)] ">
-                {pageData.heroTitle || "Jiffy Booth"}
+                {pageData?.heroTitle || ""}
               </h1>
+              
               <p className="text-jiffy-dark mt-6 font-light tracking-widest max-w-md text-base md:text-[clamp(18px,1.5vw,20px)] ">
-                {pageData.heroBio || "Capturing a jiffy that lasts forever"}
+                {pageData?.heroBio || ""}
               </p>
             </div>
 
-            
             <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500 order-2 md:order-1">
               {pageData.heroImage && (
                 <Image 
@@ -153,23 +175,23 @@ export default function Home() {
                   alt="Photo Strip"
                   width={400}
                   height={700}
+  
                   className="h-auto w-[41vw] max-w-[260px] md:w-64"
                 />
               )}
             </div>
-
           </div>
         </section>
 
       {/* --- OUR TEMPLATES SECTION --- */}
-      <section id="templates" className="w-full py-12 scroll-mt-24 bg-slate-50">
+      <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 mb-16 flex justify-center">
           <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
             Our Templates
           </h2>
         </div>
 
-        <div className="glide relative w-full overflow-visible py-12 md:py-16" ref={glideRef}>
+        <div className="glide relative w-full overflow-visible py-2 md:py-16" ref={glideRef}>
           <div className="glide__track overflow-visible" data-glide-el="track">
             <ul className="glide__slides items-center min-h-[450px] md:min-h-[500px]">
               {pageData.templates?.map((item: any, index: number) => (
@@ -190,10 +212,10 @@ export default function Home() {
 
           <div className="glide__arrows pointer-events-none absolute inset-0 flex items-center justify-between px-4 md:px-20 z-20" data-glide-el="controls">
             <button className="glide__arrow pointer-events-auto p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
+              <svg className="w-3 h-3 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
             <button className="glide__arrow pointer-events-auto p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
+              <svg className="w-3 h-3 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
 
