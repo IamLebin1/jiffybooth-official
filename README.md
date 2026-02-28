@@ -45,27 +45,32 @@ Follow these steps to set up the project on your new machine:
 git clone [your-repository-url]
 cd jiffy-booth
 npm install
+```
 
 ### 2.Configure Environment Variables
+```bash
 Create a file named .env.local in the root directory and paste the following:
 
 NEXT_PUBLIC_SANITY_PROJECT_ID="g8867hcl"
 NEXT_PUBLIC_SANITY_DATASET="production"
-
+```
 ### 3. Run & Build
+```bash
 To start the development server, run:
 npm run dev
+```
 
 Troubleshooting (ENOSPC Error)
+```bash
 If you encounter a no space left on device error during compilation:
 Clear the Next.js cache by running: rm -rf .next
 Restart the server: npm run dev
-
+```
 
 Project Structure:
-
+```bash
 app/: Core application logic, routing, and UI components.
 sanity/: Content schemas and client configurations.
 public/: Static assets (logos, fallback images).
-
+```
 © 2026 Jiffy Ventures. All rights reserved.
