@@ -154,7 +154,7 @@ export default function Home() {
                   alt="Jiffy Logo"
                   width={300}
                   height={150}
-                  className="h-auto w-24 md:w-40 object-contain"
+                  className="hidden md:block h-auto w-24 md:w-40 object-contain"
                 />
               </div>
               

@@ -35,6 +35,7 @@ type SiteSettings = {
       tiktok?: string;
       xiaohongshu?: string;
     };
+    footerLinks?: NavLink[];
   };
   whatsappSettings?: {
     whatsappNumber?: string;
@@ -83,39 +84,43 @@ export default function RootLayout({
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   // --- FETCH HEADER & FOOTER SETTINGS ---
-  useEffect(() => {
-    async function fetchSettings() {
-      try {
-        const data = await client.fetch(
-          `*[_type == "headerFooter"][0] {
-            headerSection {
-              "logo": logo.asset->url,
-              navigationLinks
-            },
-            footerSection {
-              companyName,
-              tagline,
-              socialLinks,
-              copyrightText
-            },
-            whatsappSettings {
-              whatsappNumber,
-              defaultMessage,
-              floatingMessage
-            }
-          }`,
-          {},
-          { cache: 'no-store' }
-        );
-        setSiteSettings(data);
-      } catch (error) {
-        console.error("Error fetching header/footer settings:", error);
+    useEffect(() => {
+      async function fetchSettings() {
+        try {
+          const data = await client.fetch(
+            `*[_type == "headerFooter"][0] {
+              headerSection {
+                "logo": logo.asset->url,
+                navigationLinks
+              },
+              footerSection {
+                companyName,
+                tagline,
+                socialLinks,
+                copyrightText,
+                "footerLinks": footerLinks[]-> {
+                  "name": title,
+                  "href": "/services/" + slug.current
+                }
+              },
+              whatsappSettings {
+                whatsappNumber,
+                defaultMessage,
+                floatingMessage
+              }
+            }`,
+            {},
+            { cache: 'no-store' }
+          );
+          setSiteSettings(data);
+        } catch (error) {
+          console.error("Error fetching header/footer settings:", error);
+        }
       }
-    }
-    if (!isStudio) {
-      fetchSettings();
-    }
-  }, [isStudio]);
+      if (!isStudio) {
+        fetchSettings();
+      }
+    }, [isStudio]);
 
   // Show WhatsApp message after 2 seconds
   useEffect(() => {
@@ -330,13 +335,21 @@ export default function RootLayout({
                     </ul>
                   </div>
                   <div>
-                    <h3 className="font-bold mb-6 text-gray-200 uppercase text-xs tracking-widest">Our Services</h3>
-                    <ul className="space-y-4 text-gray-400 text-sm">
-                      <li><Link href="/services/photo-booth" className="hover:text-white transition-colors">Photo Booth</Link></li>
-                      <li><Link href="/services/roaming-booth" className="hover:text-white transition-colors">Roaming Booth</Link></li>
-                      <li><Link href="/services/audio-booth" className="hover:text-white transition-colors">Audio Booth</Link></li>
-                    </ul>
-                  </div>
+                      <h3 className="font-bold mb-6 text-gray-200 uppercase text-xs tracking-widest">Our Services</h3>
+                      <ul className="space-y-4 text-gray-400 text-sm">
+                          {siteSettings?.footerSection?.footerLinks && siteSettings.footerSection.footerLinks.length > 0 ? (
+                            siteSettings.footerSection.footerLinks.map((link: any) => (
+                        <li key={link.href}>
+                            <Link href={link.href} className="hover:text-white transition-colors">
+                            {link.name}
+                          </Link>
+                        </li>
+                      ))
+                    ) : (
+                      <li className="text-gray-600 italic text-xs animate-pulse">Loading services...</li>
+                    )}
+                  </ul>
+                </div>
                 </div>
               </div>
 
@@ -438,7 +451,7 @@ export default function RootLayout({
 
                       <button 
                         type="submit"
-className="w-full bg-jiffy-dark text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-normal text-sm hover:bg-black transition-all active:scale-[0.98]"                      >
+                        className="w-full bg-jiffy-dark text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-normal text-sm hover:bg-black transition-all active:scale-[0.98]"                      >
                         {status === 'success' ? 'Opening WhatsApp...' : 'Submit via WhatsApp'}
                       </button>
                     </form>

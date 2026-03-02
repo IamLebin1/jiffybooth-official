@@ -3,7 +3,7 @@ export default {
   title: 'Header & Footer Settings',
   type: 'document',
   fields: [
-    // HEADER SECTION
+    // --- HEADER SECTION ---
     {
       name: 'headerSection',
       title: 'Header Section',
@@ -13,11 +13,8 @@ export default {
           name: 'logo',
           title: 'Logo',
           type: 'image',
-          description: 'Logo displayed in the header navigation',
-          options: {
-            hotspot: true
-          },
-          validation: (Rule: any) => Rule.required()
+          options: { hotspot: true },
+          validation: (rule: any) => rule.required()
         },
         {
           name: 'navigationLinks',
@@ -27,33 +24,16 @@ export default {
             {
               type: 'object',
               fields: [
-                {
-                  name: 'name',
-                  title: 'Link Name',
-                  type: 'string',
-                  validation: (Rule: any) => Rule.required()
-                },
-                {
-                  name: 'href',
-                  title: 'Link URL',
-                  type: 'string',
-                  description: 'e.g., /about-us, /contact-us',
-                  validation: (Rule: any) => Rule.required()
-                }
-              ],
-              preview: {
-                select: {
-                  title: 'name',
-                  subtitle: 'href'
-                }
-              }
+                { name: 'name', title: 'Link Name', type: 'string', validation: (rule: any) => rule.required() },
+                { name: 'href', title: 'Link URL', type: 'string', validation: (rule: any) => rule.required() }
+              ]
             }
           ]
         }
       ]
     },
 
-    // FOOTER SECTION
+    // --- FOOTER SECTION ---
     {
       name: 'footerSection',
       title: 'Footer Section',
@@ -64,45 +44,35 @@ export default {
           title: 'Company Name',
           type: 'string',
           initialValue: 'Jiffy Booth',
-          validation: (Rule: any) => Rule.required()
+          validation: (rule: any) => rule.required()
         },
         {
           name: 'tagline',
           title: 'Tagline/Description',
           type: 'text',
           rows: 3,
-          initialValue: '"Capturing a jiffy that lasts forever." We specialize in premium event entertainment that brings people together.',
-          validation: (Rule: any) => Rule.required()
+          initialValue: '"Capturing a jiffy that lasts forever."',
+          validation: (rule: any) => rule.required()
+        },
+        {
+          name: 'footerLinks',
+          title: 'Footer Our Services Links',
+          type: 'array',
+          of: [
+            {
+              type: 'reference',
+              to: [{ type: 'ourServices' }] 
+            }
+          ]
         },
         {
           name: 'socialLinks',
           title: 'Social Media Links',
           type: 'object',
           fields: [
-            {
-              name: 'instagram',
-              title: 'Instagram URL',
-              type: 'url',
-              validation: (Rule: any) => Rule.uri({
-                scheme: ['http', 'https']
-              })
-            },
-            {
-              name: 'tiktok',
-              title: 'TikTok URL',
-              type: 'url',
-              validation: (Rule: any) => Rule.uri({
-                scheme: ['http', 'https']
-              })
-            },
-            {
-              name: 'xiaohongshu',
-              title: 'Xiaohongshu URL',
-              type: 'url',
-              validation: (Rule: any) => Rule.uri({
-                scheme: ['http', 'https']
-              })
-            }
+            { name: 'instagram', title: 'Instagram URL', type: 'url' },
+            { name: 'tiktok', title: 'TikTok URL', type: 'url' },
+            { name: 'xiaohongshu', title: 'Xiaohongshu URL', type: 'url' }
           ]
         },
         {
@@ -114,7 +84,7 @@ export default {
       ]
     },
 
-    // WHATSAPP SETTINGS
+    // --- WHATSAPP SETTINGS ---
     {
       name: 'whatsappSettings',
       title: 'WhatsApp Settings',
@@ -124,35 +94,26 @@ export default {
           name: 'whatsappNumber',
           title: 'WhatsApp Number',
           type: 'string',
-          description: 'Format: country code + number (e.g., 60163966562)',
-          validation: (Rule: any) => Rule.required().regex(/^[0-9]+$/, {
-            name: 'phone number'
-          }).error('Must be numbers only, no spaces or symbols')
+          validation: (rule: any) => rule.required()
         },
         {
           name: 'defaultMessage',
           title: 'Default WhatsApp Message',
           type: 'text',
-          initialValue: "Hi Jiffy Booth! I'd like to enquire...",
-          description: 'Message that opens when clicking the WhatsApp button',
-          validation: (Rule: any) => Rule.required()
+          validation: (rule: any) => rule.required()
         },
         {
           name: 'floatingMessage',
           title: 'Floating Message Box Text',
           type: 'text',
-          initialValue: "Hi, want to make your event amazing?",
-          description: 'Message displayed in the floating box above WhatsApp button',
-          validation: (Rule: any) => Rule.required()
+          validation: (rule: any) => rule.required()
         }
       ]
     }
   ],
   preview: {
     prepare() {
-      return {
-        title: 'Header & Footer Settings'
-      }
+      return { title: 'Header & Footer Settings' }
     }
   }
 }
