@@ -148,8 +148,8 @@ export default function Home() {
 
           <div className="relative z-10 max-w-7xl mx-auto w-full px-6 flex flex-col md:flex-row items-center justify-center gap-10 md:gap-20">
             
-            <div className="flex flex-col items-center md:items-end text-center md:text-right order-1 md:order-2">
-              <div className="flex -mb-2 justify-center md:justify-end w-full">
+            <div className="flex flex-col items-center text-center order-1 md:order-2">
+              <div className="flex -mb-2 justify-center w-full">
                 <Image 
 
                   src={pageData?.heroLogo ? urlFor(pageData.heroLogo).url() : "/jiffy-logo.png"} 
@@ -167,6 +167,16 @@ export default function Home() {
               <p className="text-jiffy-dark mt-6 font-light tracking-widest max-w-md text-base md:text-[clamp(18px,1.5vw,20px)] ">
                 {pageData?.heroBio || ""}
               </p>
+
+              <a
+                href="https://api.whatsapp.com/send/?phone=60172082266&text=Hi+Jiffy+Booth%21+I%27d+like+to+enquire+about+...+&type=phone_number&app_absent=0"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block mt-8 px-10 py-4 rounded-full font-bold uppercase tracking-widest text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
+                style={{ backgroundColor: '#9b5744' }}
+              >
+                Ask Us
+              </a>
             </div>
 
           </div>
