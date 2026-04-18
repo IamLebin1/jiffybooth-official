@@ -122,6 +122,13 @@ export default defineType({
               validation: (Rule) => Rule.required(),
             },
             {
+              name: 'slug',
+              type: 'slug',
+              title: 'Service Slug',
+              options: { source: 'title' },
+              validation: (Rule) => Rule.required(),
+            },
+            {
               name: 'subheading',
               type: 'string',
               title: 'Subheading',

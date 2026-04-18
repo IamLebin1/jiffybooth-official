@@ -118,7 +118,7 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
   };
 
   return (
-    <main className="min-h-screen bg-white font-sans text-black overflow-x-hidden">
+    <main className="min-h-screen bg-white font-inter text-black overflow-x-hidden">
       
       {/* Hero Section */}
       <section className="relative w-full h-[450px] md:h-[650px] flex flex-col items-center justify-center text-center overflow-hidden">

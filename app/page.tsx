@@ -118,6 +118,13 @@ export default function Home() {
 
   // Derive the brands list: fall back to an empty array if none are set in Sanity
   const brands = pageData.brands && pageData.brands.length > 0 ? pageData.brands : [];
+  const categories = pageData.categories && pageData.categories.length > 0 ? pageData.categories : [];
+
+  const serviceSlugFor = (event: any, index: number) => {
+    const rawSlug = event?.slug?.current || event?.slug;
+    if (rawSlug) return rawSlug;
+    return `service-${index + 1}`;
+  };
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -179,6 +186,61 @@ export default function Home() {
 
           </div>
         </section>
+
+      {/* --- SERVICE GRID SECTION --- */}
+      {categories.length > 0 && (
+        <section className="bg-[#b9b2a6] py-16 md:py-24 px-6 scroll-mt-24">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+              <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Services</p>
+              <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
+                A Booth for All Occasions
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 xl:gap-10">
+              {categories.map((event: any, index: number) => {
+                const slug = serviceSlugFor(event, index);
+
+                return (
+                  <Link
+                    key={index}
+                    href={`/services/${slug}`}
+                    className="group block text-jiffy-dark"
+                  >
+                    <article className="space-y-4 h-full">
+                      <div className="overflow-hidden rounded-[2rem] transition-transform duration-500 group-hover:-translate-y-2">
+                        {event.image && (
+                          <Image
+                            src={urlFor(event.image).url()}
+                            alt={event.title}
+                            width={800}
+                            height={1000}
+                            className="h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        )}
+                      </div>
+
+                      <div className="px-1">
+                        <h3 className="font-inter italic text-xl md:text-2xl text-jiffy-dark mb-3">
+                          {event.title}
+                        </h3>
+                        <p className="text-sm md:text-[15px] leading-relaxed text-jiffy-dark/85">
+                          {event.subheading || event.description}
+                        </p>
+                        <div className="mt-5 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
+                          Learn More
+                          <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                        </div>
+                      </div>
+                    </article>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
@@ -254,27 +316,6 @@ export default function Home() {
             </div>
           </div>
         )}
-      </section>
-
-      {/* --- DYNAMIC CATEGORY SECTIONS --- */}
-      <section className="max-w-7xl mx-auto py-24 md:py-32 px-6 sm:px-12 space-y-32 md:space-y-48">
-        {pageData.categories?.map((event: any, index: number) => (
-          <div key={index} className={`flex flex-col items-center gap-12 lg:gap-24 ${index % 2 === 1 ? 'md:flex-row-reverse' : 'md:flex-row'} group`}>
-            <div className={`flex-1 space-y-6 text-center ${index % 2 === 1 ? 'md:text-left md:pl-12' : 'md:text-left md:pr-12'}`}>
-              <h2 className="text-jiffy-dark font-extrabold tracking-tight text-4xl md:text-5xl lg:text-6xl leading-[1.1]">{event.title}</h2>
-              {event.subheading && <p className="text-black text-lg md:text-xl font-normal max-w-xl mx-auto md:mx-0">{event.subheading}</p>}
-              <p className="text-gray-500 text-lg md:text-xl font-normal max-w-xl mx-auto md:mx-0">{event.description}</p>
-              <div className="pt-4"><Link href="/our-services" className="inline-block px-10 py-4 border-2 border-jiffy-dark text-jiffy-dark font-bold rounded-full hover:bg-jiffy-dark hover:text-white transition-all transform active:scale-95">Learn More</Link></div>
-            </div>
-            <div className="flex-1 w-full flex justify-center">
-              <div className="relative p-4 rounded-2xl shadow-xl w-full max-w-lg" style={{ backgroundColor: event.bgColor || '#ffffff' }}>
-                <div className="overflow-hidden rounded-xl bg-white shadow-inner">
-                  {event.image && <Image src={urlFor(event.image).url()} alt={event.title} width={800} height={1000} className="w-full h-[350px] md:h-[480px] object-cover transition-transform duration-1000 group-hover:scale-110" />}
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
       </section>
 
       {/* --- TESTIMONIALS SECTION: PRESERVED CUSTOM SCROLLBAR --- */}
