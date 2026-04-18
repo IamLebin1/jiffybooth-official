@@ -2,16 +2,6 @@ import { client } from '@/sanity/lib/client';
 import Image from "next/image";
 import Link from "next/link";
 
-const eventTypes = [
-  { title: 'Wedding', description: 'Beautiful celebrations for couples and families.' },
-  { title: 'Birthday', description: 'Memorable parties for every milestone.' },
-  { title: 'Corporate', description: 'Professional events with polished branding.' },
-  { title: 'Bazaar', description: 'Market-style events with a festive atmosphere.' },
-  { title: 'Pet Parties', description: 'Fun, pet-friendly gatherings and photo moments.' },
-  { title: 'Babies', description: 'Charming baby showers, arrivals, and first celebrations.' },
-  { title: 'Festives', description: 'Seasonal and cultural events with joyful themes.' },
-];
-
 export default async function OurServicesPage() {
   // Fetch all booths from 'ourServices' collection
   const sanityServices = await client.fetch(
@@ -37,33 +27,8 @@ export default async function OurServicesPage() {
         </div>
       </section>
 
-      {/* --- EVENT TYPES SECTION --- */}
-      <section className="py-10 px-6 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="mb-8 text-center">
-            <p className="text-sm uppercase tracking-[0.35em] text-slate-500">Event Types</p>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">Events we bring to life</h2>
-            <p className="mt-3 text-gray-600 max-w-2xl mx-auto">
-              Choose the perfect experience for your next event with our curated event type offerings.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {eventTypes.map((event) => (
-              <div key={event.title} className="rounded-[2rem] border border-gray-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
-                <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-slate-900 text-white font-bold text-lg mb-4">
-                  {event.title.charAt(0)}
-                </div>
-                <h3 className="text-xl font-semibold text-slate-900 mb-2">{event.title}</h3>
-                <p className="text-gray-600">{event.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* --- SERVICES GRID --- */}
-      <section className="py-4 md:py-10 px-6 max-w-7xl mx-auto">
+      <section id="services" className="py-4 md:py-10 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {sanityServices.map((service: any) => (
             <div key={service._id} className="group flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:-translate-y-2 transition-all duration-500">

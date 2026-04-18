@@ -185,10 +185,12 @@ export default function RootLayout({
   
   // Navigation links from Sanity or fallback
   const navLinks: NavLink[] = (siteSettings?.headerSection?.navigationLinks as NavLink[]) || [
-    { name: "Our Services", href: "/our-services" },
     { name: "About Us", href: "/about-us" },
-    { name: "Contact Us", href: "/contact-us" },
+    { name: "Our Services", href: "/our-services" },
+    { name: "Our Events", href: "/our-events" },
+    { name: "Advice", href: "/advice" },
     { name: "FAQ", href: "/faq" },
+    { name: "Contact Us", href: "/contact-us" },
   ];
 
   // Footer data from Sanity or fallbacks
