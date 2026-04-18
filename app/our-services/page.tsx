@@ -65,6 +65,20 @@ export default async function OurServicesPage() {
           </div>
         )}
       </section>
+
+      {/* --- PAGE CTA --- */}
+      <section className="py-20 md:py-24 text-center px-6">
+        <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-5xl mb-10">
+          Ready to Capture the Moment?
+        </h2>
+        <Link
+          href="/contact-us#contact-form"
+          className="inline-block text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
+          style={{ backgroundColor: '#9b5744' }}
+        >
+          Enquire Now
+        </Link>
+      </section>
     </main>
   );
 }

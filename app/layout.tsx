@@ -188,7 +188,7 @@ export default function RootLayout({
     { name: "About Us", href: "/about-us" },
     { name: "Our Services", href: "/our-services" },
     { name: "Our Events", href: "/#templates" },
-    { name: "Advice", href: "/faq" },
+    { name: "Advice", href: "/advice" },
     { name: "FAQ", href: "/faq" },
   ];
   const rightNavLink: NavLink = { name: "Contact Us", href: "/contact-us" };
