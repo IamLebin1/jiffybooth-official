@@ -28,14 +28,6 @@ export default defineType({
       validation: (Rule) => Rule.required(),
     }),
 
-    defineField({
-      name: 'heroImage',
-      title: 'Hero Image (Photo Strip)',
-      type: 'image',
-      options: {hotspot: true},
-      validation: (Rule) => Rule.required(),
-    }),
-
     // --- NEW: DYNAMIC HERO BACKGROUND FIELDS ---
     defineField({
       name: 'heroBackgroundType',
