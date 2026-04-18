@@ -10,7 +10,7 @@ import { createClient } from "next-sanity";
 import imageUrlBuilder from '@sanity/image-url';
 import Link from 'next/link';
 // Added Star icon for the reviews
-import { User, Star } from "lucide-react"; 
+import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react"; 
 
 // Glide Styles
 import "@glidejs/glide/dist/css/glide.core.min.css"; 
@@ -31,20 +31,31 @@ function urlFor(source: any) {
 
 export default function Home() {
   const glideRef = useRef(null);
+  const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
   const [pageData, setPageData] = useState<any>(null);
+  const [servicesData, setServicesData] = useState<any[]>([]);
+  const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
   // --- 1. DATA FETCHING ---
   useEffect(() => {
     async function fetchData() {
       try {
-        // Updated GROQ query to dereference the video asset URL
+        // Fetch main page content and booth services for the services grid
         const data = await client.fetch(
-          `*[_type == "mainPage"] | order(_updatedAt desc)[0] {
-            ...,
-            "heroVideoUrl": heroBackgroundVideo.asset->url,
-            "brands": brands[] {
-              name,
-              "logo": logo.asset->url
+          `{
+            "mainPage": *[_type == "mainPage"] | order(_updatedAt desc)[0] {
+              ...,
+              "heroVideoUrl": heroBackgroundVideo.asset->url,
+              "brands": brands[] {
+                name,
+                "logo": logo.asset->url
+              }
+            },
+            "services": *[_type == "ourServices"] | order(order asc) {
+              title,
+              description,
+              "slug": slug.current,
+              "image": image.asset->url
             }
           }`, 
           {}, 
@@ -53,7 +64,8 @@ export default function Home() {
             cache: 'no-store' 
           }
         );
-        setPageData(data);
+        setPageData(data?.mainPage || null);
+        setServicesData(data?.services || []);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
       }
@@ -114,17 +126,27 @@ export default function Home() {
     }
   }, [pageData]);
 
+  useEffect(() => {
+    const updateTestimonialsScrollState = () => {
+      const row = testimonialsRowRef.current;
+      if (!row) return;
+      setTestimonialsCanScroll(row.scrollWidth > row.clientWidth + 1);
+    };
+
+    const raf = requestAnimationFrame(updateTestimonialsScrollState);
+    window.addEventListener('resize', updateTestimonialsScrollState);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('resize', updateTestimonialsScrollState);
+    };
+  }, [pageData?.testimonials?.length]);
+
   if (!pageData) return <div className="min-h-screen bg-white" />;
 
   // Derive the brands list: fall back to an empty array if none are set in Sanity
   const brands = pageData.brands && pageData.brands.length > 0 ? pageData.brands : [];
-  const categories = pageData.categories && pageData.categories.length > 0 ? pageData.categories : [];
-
-  const serviceSlugFor = (event: any, index: number) => {
-    const rawSlug = event?.slug?.current || event?.slug;
-    if (rawSlug) return rawSlug;
-    return `service-${index + 1}`;
-  };
+  const services = servicesData && servicesData.length > 0 ? servicesData : [];
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -188,7 +210,7 @@ export default function Home() {
         </section>
 
       {/* --- SERVICE GRID SECTION --- */}
-      {categories.length > 0 && (
+      {services.length > 0 && (
         <section className="bg-[#b9b2a6] py-16 md:py-24 px-6 scroll-mt-24">
           <div className="max-w-7xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
@@ -199,8 +221,8 @@ export default function Home() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 xl:gap-10">
-              {categories.map((event: any, index: number) => {
-                const slug = serviceSlugFor(event, index);
+              {services.map((service: any, index: number) => {
+                const slug = service?.slug || `service-${index + 1}`;
 
                 return (
                   <Link
@@ -210,23 +232,34 @@ export default function Home() {
                   >
                     <article className="space-y-4 h-full">
                       <div className="overflow-hidden rounded-[2rem] transition-transform duration-500 group-hover:-translate-y-2">
-                        {event.image && (
+                        {service.image ? (
                           <Image
-                            src={urlFor(event.image).url()}
-                            alt={event.title}
+                            src={service.image}
+                            alt={service.title}
                             width={800}
                             height={1000}
                             className="h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
+                        ) : (
+                          <div className="h-[320px] w-full bg-gradient-to-br from-[#f5ebe1] to-[#e7cfb4] flex items-center justify-center px-6 text-center border border-[#d9c0a3]">
+                            <div>
+                              <p className="text-jiffy-dark font-bold text-lg md:text-xl tracking-tight">
+                                {service.title}
+                              </p>
+                              <p className="text-jiffy-dark/70 text-sm mt-2 uppercase tracking-[0.15em]">
+                                Image Coming Soon
+                              </p>
+                            </div>
+                          </div>
                         )}
                       </div>
 
                       <div className="px-1">
                         <h3 className="font-inter italic text-xl md:text-2xl text-jiffy-dark mb-3">
-                          {event.title}
+                          {service.title}
                         </h3>
                         <p className="text-sm md:text-[15px] leading-relaxed text-jiffy-dark/85">
-                          {event.subheading || event.description}
+                          {service.description}
                         </p>
                         <div className="mt-5 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
                           Learn More
@@ -290,44 +323,78 @@ export default function Home() {
         </div>
       </section>
 
-      {/* --- MARQUEE SECTION: LONGER LOOP RANGE --- */}
-      <section className="bg-white py-20 md:py-32 border-y border-gray-100 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-          <div className="mb-16">
-            <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-[clamp(36px,4vw,56px)] mb-4">
-              Trusted By
-            </h2>
-            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-light">
-              Partnering with companies to create unforgettable memories
-            </p>
-          </div>
-        </div>
+      {/* --- USP SECTION --- */}
+      <section className="bg-[#e8dfd2] py-16 md:py-24 border-y border-[#ddd0be]">
+        <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
+          <h2 className="text-center text-jiffy-dark font-black uppercase tracking-tight text-3xl md:text-5xl mb-12 md:mb-16">
+            Why Jiffy Booth
+          </h2>
 
-        {/* Removed centered max-width container to allow full horizontal range */}
-        {brands.length > 0 && (
-          <div className="w-full overflow-hidden relative">
-            <div className="flex gap-16 md:gap-32 animate-marquee-slow items-center">
-              {/* LOOP INCREASED: Duplicate 10x to ensure screen is always filled and loop is long */}
-              {[...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands].map((brand: any, i: number) => (
-                <div key={i} className="flex items-center justify-center shrink-0">
-                  <img src={brand.logo} alt={brand.name} className="h-10 md:h-14 w-auto object-contain" />
-                </div>
-              ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 md:gap-y-12 lg:gap-x-10 xl:gap-x-14">
+            <div className="text-center space-y-4">
+              <div className="flex justify-center text-jiffy-dark">
+                <ShieldCheck size={42} strokeWidth={2.2} />
+              </div>
+              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight whitespace-nowrap">
+                Premium Quality
+              </h3>
+              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+                Professional-grade booths with polished outputs your guests will want to keep.
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="flex justify-center text-jiffy-dark">
+                <Heart size={42} strokeWidth={2.2} />
+              </div>
+              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+                Loved by Guests
+              </h3>
+              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+                Easy, fun experiences designed to create genuine smiles and memorable moments.
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="flex justify-center text-jiffy-dark">
+                <Calendar size={42} strokeWidth={2.2} />
+              </div>
+              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+                Reliable Setup
+              </h3>
+              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+                On-time arrival, smooth coordination, and support from pre-event planning to wrap-up.
+              </p>
+            </div>
+
+            <div className="text-center space-y-4">
+              <div className="flex justify-center text-jiffy-dark">
+                <Sparkles size={42} strokeWidth={2.2} />
+              </div>
+              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+                Fresh Concepts
+              </h3>
+              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+                Creative themes, custom templates, and modern booth styles tailored to your event.
+              </p>
             </div>
           </div>
-        )}
+        </div>
       </section>
 
       {/* --- TESTIMONIALS SECTION: PRESERVED CUSTOM SCROLLBAR --- */}
       {pageData.testimonials && pageData.testimonials.length > 0 && (
         <section className="bg-slate-50 py-24 md:py-32 overflow-hidden border-y border-gray-100">
-          <div className="max-w-7xl mx-auto px-6">
+          <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
             <div className="text-center mb-16">
               <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-4">What Our Clients Say</h2>
               <div className="h-1.5 w-24 bg-jiffy-dark mx-auto rounded-full opacity-20" />
             </div>
 
-            <div className="overflow-x-auto testimonial-scroll pb-8 flex flex-row nowrap gap-6">
+            <div
+              ref={testimonialsRowRef}
+              className={`overflow-x-auto testimonial-scroll pb-8 flex flex-row nowrap gap-6 ${testimonialsCanScroll ? 'justify-start' : 'justify-center'}`}
+            >
               {pageData.testimonials.map((testimonial: any, i: number) => (
                 <div key={i} className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-[280px] hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div>
@@ -355,6 +422,34 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* --- MARQUEE SECTION: LONGER LOOP RANGE --- */}
+      <section className="bg-white py-20 md:py-32 border-y border-gray-100 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+          <div className="mb-16">
+            <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-[clamp(36px,4vw,56px)] mb-4">
+              Trusted By
+            </h2>
+            <p className="text-gray-600 text-lg max-w-2xl mx-auto font-light">
+              Partnering with companies to create unforgettable memories
+            </p>
+          </div>
+        </div>
+
+        {/* Removed centered max-width container to allow full horizontal range */}
+        {brands.length > 0 && (
+          <div className="w-full overflow-hidden relative">
+            <div className="flex gap-16 md:gap-32 animate-marquee-slow items-center">
+              {/* LOOP INCREASED: Duplicate 10x to ensure screen is always filled and loop is long */}
+              {[...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands].map((brand: any, i: number) => (
+                <div key={i} className="flex items-center justify-center shrink-0">
+                  <img src={brand.logo} alt={brand.name} className="h-10 md:h-14 w-auto object-contain" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
 
       {/* --- FOOTER CTA --- */}
       <section className="py-24 text-center">
