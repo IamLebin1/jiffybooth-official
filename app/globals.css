@@ -12,7 +12,7 @@
   --color-foreground: var(--foreground);
   
   /* Typography */
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
 
   /* Custom Animations - Standard Tailwind v4 Syntax */
