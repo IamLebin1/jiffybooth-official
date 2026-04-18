@@ -183,15 +183,25 @@ export default function RootLayout({
   const whatsappNum = siteSettings?.whatsappSettings?.whatsappNumber || '60163966562';
   const floatingMessage = siteSettings?.whatsappSettings?.floatingMessage || "Hi, want to make your event amazing?";
   
+<<<<<<< HEAD
   // Navigation links from Sanity or fallback
   const navLinks: NavLink[] = (siteSettings?.headerSection?.navigationLinks as NavLink[]) || [
     { name: "About Us", href: "/about-us" },
     { name: "Our Services", href: "/our-services" },
     { name: "Our Events", href: "/our-events" },
     { name: "Advice", href: "/advice" },
+=======
+  // Header navigation arranged to keep Contact Us on the right
+  const leftNavLinks: NavLink[] = [
+    { name: "About Us", href: "/about-us" },
+    { name: "Our Services", href: "/our-services" },
+    { name: "Our Events", href: "/#templates" },
+    { name: "Advice", href: "/faq" },
+>>>>>>> 82298101f28713bbaf7300c6439cc5872ee4812e
     { name: "FAQ", href: "/faq" },
     { name: "Contact Us", href: "/contact-us" },
   ];
+  const rightNavLink: NavLink = { name: "Contact Us", href: "/contact-us" };
 
   // Footer data from Sanity or fallbacks
   const companyName = siteSettings?.footerSection?.companyName || "Jiffy Booth";
@@ -208,26 +218,33 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-jiffy-cream min-h-screen flex flex-col`}>
         
         {/* --- NAVIGATION BAR --- */}
-        <header className="bg-jiffy-dark sticky top-0 z-[100] w-full shadow-md">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
-              <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
-                <img src={logoUrl} alt="Jiffy Logo" className="object-contain" />
-              </div>
-            </Link>
+        <header className="bg-[#f5ebe1] sticky top-0 z-[100] w-full">
+          <div className="w-full px-6 lg:px-10 h-20 flex items-center">
+            <div className="flex items-center gap-8 flex-1 min-w-0">
+              <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
+                <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
+                  <img src={logoUrl} alt="Jiffy Logo" className="object-contain" />
+                </div>
+              </Link>
 
-            <nav className="hidden md:flex items-center gap-8 text-white font-medium">
-              {/* FIXED: Added ': any' to link parameter to bypass implicit any error */}
-              {navLinks.map((link: any) => (
-                <Link key={link.href} href={link.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
-                  {link.name}
-                </Link>
-              ))}
+              <nav className="hidden md:flex items-center gap-8 text-jiffy-dark font-medium justify-start flex-1 min-w-0">
+                {leftNavLinks.map((link) => (
+                  <Link key={link.name} href={link.href} className="hover:text-[#9b5744] transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <nav className="hidden md:flex items-center text-jiffy-dark font-medium ml-6 flex-shrink-0">
+              <Link href={rightNavLink.href} className="hover:text-[#9b5744] transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
+                {rightNavLink.name}
+              </Link>
             </nav>
 
-              <button 
+            <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="md:hidden text-white p-2 focus:outline-none transition-transform duration-300 active:scale-90"
+              className="md:hidden ml-auto text-jiffy-dark p-2 focus:outline-none transition-transform duration-300 active:scale-90"
               style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
               aria-label="Toggle Menu"
             >
@@ -240,15 +257,14 @@ export default function RootLayout({
           </div>
 
           {isMenuOpen && (
-            <nav className="md:hidden bg-jiffy-dark border-t border-gray-700 absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
+            <nav className="md:hidden bg-[#f5ebe1] border-t border-[#e3d7cc] absolute w-full left-0 animate-in slide-in-from-top duration-200">
               <ul className="flex flex-col p-4 space-y-2">
-                {/* FIXED: Added ': any' to link parameter here as well */}
-                {navLinks.map((link: any) => (
-                  <li key={link.href}>
+                {[...leftNavLinks, rightNavLink].map((link) => (
+                  <li key={link.name}>
                     <Link 
                       href={link.href} 
                       onClick={() => setIsMenuOpen(false)} 
-                      className="text-white text-lg（14px) font-bold block border-b border-gray-800 pb-1.5 active:text-blue-300"
+                      className="text-jiffy-dark text-lg font-bold block border-b border-[#e3d7cc] pb-1.5 active:text-[#9b5744]"
                     >
                       {link.name}
                     </Link>
