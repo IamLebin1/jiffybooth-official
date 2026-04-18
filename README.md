@@ -43,7 +43,7 @@ Follow these steps to set up the project on your new machine:
 ### 1. Clone & Install
 ```bash
 git clone [your-repository-url]
-cd jiffy-booth
+cd JIFFYBOOTH-OFFICIAL
 npm install
 ```
 
