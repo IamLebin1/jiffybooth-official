@@ -1,3 +1,5 @@
+// main landing page 
+
 'use client'; 
 
 import { useEffect, useRef, useState } from "react";
@@ -167,18 +169,6 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="flex-shrink-0 shadow-2xl rotate-[-2deg] border-[10px] border-white z-20 transition-transform hover:rotate-0 duration-500 order-2 md:order-1 -mt-8 md:mt-0">
-              {pageData.heroImage && (
-                <Image 
-                  src={urlFor(pageData.heroImage).url()}
-                  alt="Photo Strip"
-                  width={400}
-                  height={700}
-  
-                  className="h-auto w-[41vw] max-w-[260px] md:w-64"
-                />
-              )}
-            </div>
           </div>
         </section>
 
