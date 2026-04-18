@@ -31,7 +31,7 @@ const featuredArticles = [
 export default function AdvicePage() {
   return (
     <main className="min-h-screen bg-[#f3f1ee] text-jiffy-dark font-inter">
-      <section className="max-w-7xl mx-auto px-6 md:px-8 lg:px-10 pt-14 md:pt-16 pb-14 md:pb-16">
+      <section className="max-w-6xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 pt-14 md:pt-16 pb-14 md:pb-16">
         <h1 className="text-[#9b5744] text-base md:text-lg uppercase tracking-[0.28em] font-bold mb-6 md:mb-8">
           Articles
         </h1>
@@ -71,7 +71,7 @@ export default function AdvicePage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-24 text-center px-6">
+      <section className="max-w-6xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 py-20 md:py-24 text-center">
         <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-5xl mb-10">Need Help Planning Your Setup?</h2>
         <Link
           href="/contact-us#contact-form"
