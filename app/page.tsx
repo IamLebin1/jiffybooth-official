@@ -168,15 +168,13 @@ export default function Home() {
                 {pageData?.heroBio || ""}
               </p>
 
-              <a
-                href="https://api.whatsapp.com/send/?phone=60172082266&text=Hi+Jiffy+Booth%21+I%27d+like+to+enquire+about+...+&type=phone_number&app_absent=0"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/contact-us#contact-form"
                 className="inline-block mt-8 px-10 py-4 rounded-full font-bold uppercase tracking-widest text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
                 style={{ backgroundColor: '#9b5744' }}
               >
                 Ask Us
-              </a>
+              </Link>
             </div>
 
           </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createClient } from "next-sanity";
 import imageUrlBuilder from '@sanity/image-url';
 
@@ -16,6 +16,7 @@ export default function ContactPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [headerFooterSettings, setHeaderFooterSettings] = useState<any>(null);
+  const formSectionRef = useRef<HTMLDivElement | null>(null);
 
   // Form States
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
@@ -51,6 +52,18 @@ export default function ContactPage() {
     }
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    if (window.location.hash !== '#contact-form') return;
+
+    requestAnimationFrame(() => {
+      formSectionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    });
+  }, [loading]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -191,7 +204,7 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT: FORM */}
-          <div className="flex-1 lg:max-w-xl">
+          <div id="contact-form" ref={formSectionRef} className="flex-1 lg:max-w-xl scroll-mt-24">
             <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl text-jiffy-dark border border-gray-100">
               <h2 className="text-3xl font-bold mb-8 uppercase tracking-tighter text-[#2c343f]">Quotation Request</h2>
               
