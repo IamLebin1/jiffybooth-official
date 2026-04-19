@@ -193,6 +193,12 @@ export default function RootLayout({
     { name: "Contact Us", href: "/contact-us" },
   ];
 
+  const desktopContactLink =
+    navLinks.find((link) => link.name.trim().toLowerCase() === "contact us" || link.href === "/contact-us") || null;
+  const desktopLeftLinks = desktopContactLink
+    ? navLinks.filter((link) => link !== desktopContactLink)
+    : navLinks;
+
   // Footer data from Sanity or fallbacks
   const companyName = siteSettings?.footerSection?.companyName || "Jiffy Booth";
   const tagline = siteSettings?.footerSection?.tagline || '"Capturing a jiffy that lasts forever." We specialize in premium event entertainment that brings people together.';
@@ -209,21 +215,36 @@ export default function RootLayout({
         
         {/* --- NAVIGATION BAR --- */}
         <header className="bg-[#f5ebe1] sticky top-0 z-[100] w-full">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
+          <div className="w-full px-6 md:px-8 lg:px-10 h-20 flex items-center justify-between gap-6">
+            <div className="hidden md:flex items-center gap-10 flex-1 min-w-0">
+              <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
+                <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
+                  <img src={logoUrl} alt="Jiffy Logo" className="object-contain" />
+                </div>
+              </Link>
+
+              <nav className="flex items-center gap-8 text-jiffy-dark font-medium justify-start">
+                {desktopLeftLinks.map((link) => (
+                  <Link key={link.href} href={link.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            <Link href="/" className="md:hidden flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
                 <img src={logoUrl} alt="Jiffy Logo" className="object-contain" />
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-8 text-jiffy-dark font-medium">
-              {/* FIXED: Added ': any' to link parameter to bypass implicit any error */}
-              {navLinks.map((link: any) => (
-                <Link key={link.href} href={link.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
-                  {link.name}
+            {desktopContactLink && (
+              <nav className="hidden md:flex items-center ml-auto text-jiffy-dark font-medium">
+                <Link href={desktopContactLink.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
+                  {desktopContactLink.name}
                 </Link>
-              ))}
-            </nav>
+              </nav>
+            )}
 
               <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
@@ -242,8 +263,7 @@ export default function RootLayout({
           {isMenuOpen && (
             <nav className="md:hidden bg-jiffy-dark border-t border-gray-700 absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
               <ul className="flex flex-col p-4 space-y-2">
-                {/* FIXED: Added ': any' to link parameter here as well */}
-                {navLinks.map((link: any) => (
+                {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link 
                       href={link.href} 
