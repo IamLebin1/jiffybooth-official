@@ -187,11 +187,7 @@ export default function RootLayout({
   const navLinks: NavLink[] = (siteSettings?.headerSection?.navigationLinks as NavLink[]) || [
     { name: "About Us", href: "/about-us" },
     { name: "Our Services", href: "/our-services" },
-<<<<<<< HEAD
-    { name: "Our Events", href: "/#templates" },
-=======
     { name: "Our Events", href: "/our-events" },
->>>>>>> lb
     { name: "Advice", href: "/advice" },
     { name: "FAQ", href: "/faq" },
     { name: "Contact Us", href: "/contact-us" },
