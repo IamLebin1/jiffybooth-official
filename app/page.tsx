@@ -11,6 +11,7 @@ import imageUrlBuilder from '@sanity/image-url';
 import Link from 'next/link';
 // Added Star icon for the reviews
 import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react"; 
+import { eventTypes } from "./our-events/eventData";
 
 // Glide Styles
 import "@glidejs/glide/dist/css/glide.core.min.css"; 
@@ -331,7 +332,8 @@ export default function Home() {
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
-<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
+        <div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">
+          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
             Our Templates
           </h2>
         </div>
@@ -378,57 +380,57 @@ export default function Home() {
       </section>
 
       {/* --- USP SECTION --- */}
-      <section className="bg-[#e8dfd2] py-16 md:py-24 border-y border-[#ddd0be]">
+      <section className="bg-[#e8dfd2] py-8 md:py-10 border-y border-[#ddd0be]">
         <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
-          <h2 className="text-center text-jiffy-dark font-black uppercase tracking-tight text-3xl md:text-5xl mb-12 md:mb-16">
+          <h2 className="text-center text-jiffy-dark font-black uppercase tracking-tight text-2xl md:text-3xl mb-7 md:mb-8">
             Why Jiffy Booth
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-10 md:gap-y-12 lg:gap-x-10 xl:gap-x-14">
-            <div className="text-center space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-6 md:gap-y-7 lg:gap-x-6 xl:gap-x-8">
+            <div className="text-center space-y-2.5">
               <div className="flex justify-center text-jiffy-dark">
-                <ShieldCheck size={42} strokeWidth={2.2} />
+                <ShieldCheck size={30} strokeWidth={2.1} />
               </div>
-              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight whitespace-nowrap">
+              <h3 className="text-jiffy-dark font-black uppercase text-lg md:text-xl tracking-tight whitespace-nowrap">
                 Premium Quality
               </h3>
-              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+              <p className="text-jiffy-dark/85 text-sm md:text-base leading-relaxed max-w-[220px] mx-auto">
                 Professional-grade booths with polished outputs your guests will want to keep.
               </p>
             </div>
 
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-2.5">
               <div className="flex justify-center text-jiffy-dark">
-                <Heart size={42} strokeWidth={2.2} />
+                <Heart size={30} strokeWidth={2.1} />
               </div>
-              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+              <h3 className="text-jiffy-dark font-black uppercase text-lg md:text-xl tracking-tight">
                 Loved by Guests
               </h3>
-              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+              <p className="text-jiffy-dark/85 text-sm md:text-base leading-relaxed max-w-[220px] mx-auto">
                 Easy, fun experiences designed to create genuine smiles and memorable moments.
               </p>
             </div>
 
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-2.5">
               <div className="flex justify-center text-jiffy-dark">
-                <Calendar size={42} strokeWidth={2.2} />
+                <Calendar size={30} strokeWidth={2.1} />
               </div>
-              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+              <h3 className="text-jiffy-dark font-black uppercase text-lg md:text-xl tracking-tight">
                 Reliable Setup
               </h3>
-              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+              <p className="text-jiffy-dark/85 text-sm md:text-base leading-relaxed max-w-[220px] mx-auto">
                 On-time arrival, smooth coordination, and support from pre-event planning to wrap-up.
               </p>
             </div>
 
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-2.5">
               <div className="flex justify-center text-jiffy-dark">
-                <Sparkles size={42} strokeWidth={2.2} />
+                <Sparkles size={30} strokeWidth={2.1} />
               </div>
-              <h3 className="text-jiffy-dark font-black uppercase text-2xl md:text-3xl tracking-tight">
+              <h3 className="text-jiffy-dark font-black uppercase text-lg md:text-xl tracking-tight">
                 Fresh Concepts
               </h3>
-              <p className="text-jiffy-dark/85 text-base md:text-lg leading-relaxed max-w-xs mx-auto">
+              <p className="text-jiffy-dark/85 text-sm md:text-base leading-relaxed max-w-[220px] mx-auto">
                 Creative themes, custom templates, and modern booth styles tailored to your event.
               </p>
             </div>
@@ -454,7 +456,7 @@ export default function Home() {
                   <div>
                     <div className="flex gap-1 mb-4">
                       {Array.from({ length: testimonial.rating || 5 }).map((_, star) => (
-                        <Star key={star} size={16} fill="#1F2937" className="text-jiffy-dark" />
+                        <Star key={star} size={16} fill="#9b5744" className="text-[#9b5744]" />
                       ))}
                     </div>
                     <div className="testimonial-text-scroll overflow-y-auto mb-6 h-[100px]">
