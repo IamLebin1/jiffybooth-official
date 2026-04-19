@@ -28,7 +28,7 @@ export default async function OurServicesPage() {
       </section>
 
       {/* --- SERVICES GRID --- */}
-      <section className="py-4 md:py-10 px-6 max-w-7xl mx-auto">
+      <section id="services" className="py-4 md:py-10 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
           {sanityServices.map((service: any) => (
             <div key={service._id} className="group flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:-translate-y-2 transition-all duration-500">
