@@ -208,7 +208,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-jiffy-cream min-h-screen flex flex-col`}>
         
         {/* --- NAVIGATION BAR --- */}
-        <header className="bg-jiffy-dark sticky top-0 z-[100] w-full shadow-md">
+        <header className="bg-[#f5ebe1] sticky top-0 z-[100] w-full">
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
@@ -216,7 +216,7 @@ export default function RootLayout({
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-8 text-white font-medium">
+            <nav className="hidden md:flex items-center gap-8 text-jiffy-dark font-medium">
               {/* FIXED: Added ': any' to link parameter to bypass implicit any error */}
               {navLinks.map((link: any) => (
                 <Link key={link.href} href={link.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
@@ -227,7 +227,7 @@ export default function RootLayout({
 
               <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="md:hidden text-white p-2 focus:outline-none transition-transform duration-300 active:scale-90"
+              className="md:hidden text-jiffy-dark p-2 focus:outline-none transition-transform duration-300 active:scale-90"
               style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
               aria-label="Toggle Menu"
             >
