@@ -34,6 +34,7 @@ export default function Home() {
   const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
   const [pageData, setPageData] = useState<any>(null);
   const [servicesData, setServicesData] = useState<any[]>([]);
+  const [eventsData, setEventsData] = useState<any[]>([]);
   const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
   // --- 1. DATA FETCHING ---
@@ -56,6 +57,13 @@ export default function Home() {
               description,
               "slug": slug.current,
               "image": image.asset->url
+            },
+            "events": *[_type == "ourEvents"] | order(_createdAt asc) {
+              title,
+              category,
+              description,
+              "slug": slug.current,
+              "image": image.asset->url
             }
           }`, 
           {}, 
@@ -66,6 +74,7 @@ export default function Home() {
         );
         setPageData(data?.mainPage || null);
         setServicesData(data?.services || []);
+        setEventsData(data?.events || []);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
       }
@@ -275,6 +284,51 @@ export default function Home() {
         </section>
       )}
 
+      {/* --- OUR EVENTS PREVIEW SECTION --- */}
+      <section className="py-20 md:py-32 px-6 bg-white border-t border-[#ddd0be]">
+        <div className="max-w-7xl mx-auto">
+          {/* Centered Header to match the rest of the homepage */}
+          <div className="text-center max-w-3xl mx-auto mb-12 md:mb-16">
+            <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Events</p>
+            <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
+              Moments Worth Capturing.
+            </h2>
+          </div>
+
+          {/* 3-Column Grid for better visual rhythm */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
+            {eventsData.slice(0, 3).map((item: any) => (
+              <Link 
+                key={item.slug}
+                href={`/our-events/${item.slug}`} 
+                className="group relative block h-[450px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-500"
+              >
+                <div className="absolute inset-0 bg-stone-200">
+                  <Image 
+                    src={item.image} 
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-jiffy-dark/90 via-jiffy-dark/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end text-white z-10">
+                  <div className="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <p className="text-[#e8dfd2] text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">{item.category}</p>
+                    <h3 className="text-2xl md:text-3xl font-bold tracking-tight mb-2">{item.title}</h3>
+                    <span className="inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">Explore <span className="text-orange-400">→</span></span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          <div className="mt-14 text-center">
+            <Link href="/our-events" className="inline-flex items-center justify-center rounded-full bg-[#9b5744] px-10 py-4 text-sm font-bold uppercase tracking-widest text-white shadow-xl transition-all hover:scale-105 active:scale-95">View All Events</Link>
+          </div>
+        </div>
+      </section>
+
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
 <div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
@@ -453,8 +507,8 @@ export default function Home() {
 
       {/* --- FOOTER CTA --- */}
       <section className="py-24 text-center">
-        <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-10">Ready to Capture a Jiffy?</h2>
-        <Link href="/contact-us" className="inline-block bg-jiffy-dark text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all">Book Now</Link>
+        <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-10">Ready to book?</h2>
+        <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all">Book Now</Link>
       </section>
 
       <style jsx global>{`

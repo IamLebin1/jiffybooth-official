@@ -187,7 +187,7 @@ export default function RootLayout({
   const leftNavLinks: NavLink[] = [
     { name: "About Us", href: "/about-us" },
     { name: "Our Services", href: "/our-services" },
-    { name: "Our Events", href: "/#templates" },
+    { name: "Our Events", href: "/our-events" },
     { name: "Advice", href: "/advice" },
     { name: "FAQ", href: "/faq" },
   ];
