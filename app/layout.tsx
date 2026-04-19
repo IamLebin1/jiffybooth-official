@@ -208,7 +208,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased bg-jiffy-cream min-h-screen flex flex-col`}>
         
         {/* --- NAVIGATION BAR --- */}
-        <header className="bg-jiffy-dark sticky top-0 z-[100] w-full shadow-md">
+        <header className="bg-jiffy-cream sticky top-0 z-[100] w-full shadow-md border-b border-[#e3dbd0]">
           <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <Link href="/" className="flex-shrink-0" onClick={() => setIsMenuOpen(false)}>
               <div className="w-22 h-16 md:w-26 md:h-20 relative flex items-center justify-center">
@@ -216,10 +216,10 @@ export default function RootLayout({
               </div>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-8 text-white font-medium">
+            <nav className="hidden md:flex items-center gap-8 text-jiffy-dark font-medium">
               {/* FIXED: Added ': any' to link parameter to bypass implicit any error */}
               {navLinks.map((link: any) => (
-                <Link key={link.href} href={link.href} className="hover:text-blue-300 transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
+                <Link key={link.href} href={link.href} className="hover:text-[#9b5744] transition-colors whitespace-nowrap uppercase text-sm tracking-widest">
                   {link.name}
                 </Link>
               ))}
@@ -227,7 +227,7 @@ export default function RootLayout({
 
               <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
-              className="md:hidden text-white p-2 focus:outline-none transition-transform duration-300 active:scale-90"
+              className="md:hidden text-jiffy-dark p-2 focus:outline-none transition-transform duration-300 active:scale-90"
               style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
               aria-label="Toggle Menu"
             >
@@ -240,7 +240,7 @@ export default function RootLayout({
           </div>
 
           {isMenuOpen && (
-            <nav className="md:hidden bg-jiffy-dark border-t border-gray-700 absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
+            <nav className="md:hidden bg-jiffy-cream border-t border-[#e3dbd0] absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
               <ul className="flex flex-col p-4 space-y-2">
                 {/* FIXED: Added ': any' to link parameter here as well */}
                 {navLinks.map((link: any) => (
@@ -248,7 +248,7 @@ export default function RootLayout({
                     <Link 
                       href={link.href} 
                       onClick={() => setIsMenuOpen(false)} 
-                      className="text-white text-lg（14px) font-bold block border-b border-gray-800 pb-1.5 active:text-blue-300"
+                      className="text-jiffy-dark text-lg（14px) font-bold block border-b border-[#e3dbd0] pb-1.5 active:text-[#9b5744]"
                     >
                       {link.name}
                     </Link>
