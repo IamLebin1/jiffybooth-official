@@ -455,7 +455,7 @@ export default function Home() {
       {/* --- FOOTER CTA --- */}
       <section className="py-24 text-center">
         <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-10">Ready to Book?</h2>
-        <Link href="/contact-us" className="inline-block bg-orange-500 text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-orange-600 hover:scale-105 active:scale-95 transition-all">Book Now</Link>
+        <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-[#844a39] hover:scale-105 active:scale-95 transition-all">Book Now</Link>
       </section>
 
       <style jsx global>{`

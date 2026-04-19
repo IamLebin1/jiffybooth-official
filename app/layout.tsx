@@ -249,6 +249,7 @@ export default function RootLayout({
               <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)} 
               className="md:hidden text-jiffy-dark p-2 focus:outline-none transition-transform duration-300 active:scale-90"
+              className="md:hidden text-jiffy-dark p-2 focus:outline-none transition-transform duration-300 active:scale-90"
               style={{ transform: isMenuOpen ? 'rotate(90deg)' : 'rotate(0deg)' }}
               aria-label="Toggle Menu"
             >
@@ -261,14 +262,14 @@ export default function RootLayout({
           </div>
 
           {isMenuOpen && (
-            <nav className="md:hidden bg-jiffy-dark border-t border-gray-700 absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
+            <nav className="md:hidden bg-jiffy-cream border-t border-[#e3dbd0] absolute w-full left-0 shadow-2xl animate-in slide-in-from-top duration-200">
               <ul className="flex flex-col p-4 space-y-2">
                 {navLinks.map((link) => (
                   <li key={link.href}>
                     <Link 
                       href={link.href} 
                       onClick={() => setIsMenuOpen(false)} 
-                      className="text-white text-lg（14px) font-bold block border-b border-gray-800 pb-1.5 active:text-blue-300"
+                      className="text-jiffy-dark text-lg（14px) font-bold block border-b border-[#e3dbd0] pb-1.5 active:text-[#9b5744]"
                     >
                       {link.name}
                     </Link>
