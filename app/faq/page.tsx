@@ -13,6 +13,7 @@ const client = createClient({
 export default function FAQPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -28,61 +29,93 @@ export default function FAQPage() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="min-h-screen bg-white" />;
+  const faqs = data?.faqs || [];
+
+  if (loading) return <div className="min-h-screen bg-[#f5ebe1]" />;
 
   return (
-    /* 1. Added flex and flex-col to allow the content to push the CTA down */
-    <main className="min-h-screen flex flex-col bg-white font-inter overflow-x-hidden">
-      
-      {/* --- COMPACT HEADER --- */}
-      <section className="bg-[#2c343f] py-8 md:py-10 px-6 sm:px-12 lg:px-16">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-white text-2xl md:text-3xl font-bold uppercase tracking-tight">
-              {data?.title || "FAQ"}
-            </h1>
-            <div className="h-1 w-12 bg-blue-400 mt-1 rounded-full hidden md:block"></div>
-          </div>
-          <p className="text-gray-400 text-sm md:text-base max-w-md md:text-right font-light">
-            {data?.subtitle || "Everything you need to know about booking Jiffy Booth."}
+    <main className="min-h-screen flex flex-col bg-[#f5ebe1] text-[#212121] overflow-x-hidden">
+      <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pt-20 md:pt-24 pb-10 md:pb-12">
+        <div className="text-center max-w-4xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-none mb-7">
+            {data?.title || "Frequently Asked Questions"}
+          </h1>
+          <hr className="w-full max-w-3xl mx-auto border-[#e3dbd0]" />
+        </div>
+      </section>
+
+      <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pb-16 md:pb-20">
+        {data?.subtitle && (
+          <p className="text-center text-sm md:text-base text-[#6f685a] max-w-3xl mx-auto mb-10 md:mb-12">
+            {data.subtitle}
           </p>
+        )}
+
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-[#212121] uppercase text-xl md:text-2xl tracking-wide font-bold mb-6 md:mb-8">
+            General
+          </h2>
+
+          <div className="border-t border-b border-[#e3dbd0] bg-transparent">
+            {faqs.map((faq: any, faqIndex: number) => {
+              const isOpen = openIndex === faqIndex;
+
+              return (
+                <div
+                  key={`${faq.question}-${faqIndex}`}
+                  className={faqIndex !== faqs.length - 1 ? 'border-b border-[#e3dbd0]' : ''}
+                >
+                  <button
+                    type="button"
+                    className="w-full text-left py-5 md:py-6 flex items-start justify-between gap-6"
+                    onClick={() => setOpenIndex(isOpen ? null : faqIndex)}
+                    aria-expanded={isOpen}
+                  >
+                    <span className="text-lg md:text-2xl font-semibold tracking-tight leading-snug pr-2">
+                      {faq.question}
+                    </span>
+                    <span className="text-2xl md:text-3xl leading-none text-[#212121] flex-shrink-0 mt-0.5">
+                      {isOpen ? '−' : '+'}
+                    </span>
+                  </button>
+
+                  <div
+                    className={`grid overflow-hidden transition-[grid-template-rows,opacity] duration-300 ease-in-out ${
+                      isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                    }`}
+                  >
+                    <div className="min-h-0">
+                      <div className="pb-5 md:pb-7 pr-2">
+                        <p className="text-[#3d3a35] text-sm md:text-lg leading-relaxed whitespace-pre-line max-w-5xl">
+                          {faq.answer}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
+
+        {faqs.length === 0 && (
+          <div className="text-center py-16 text-[#6f685a]">
+            No FAQs yet. Add questions in Sanity to show them here.
+          </div>
+        )}
       </section>
 
-      {/* --- DYNAMIC FAQ GRID --- */}
-      <section className="max-w-6xl mx-auto py-12 md:py-16 px-6 sm:px-12 lg:px-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0">
-          {(data?.faqs || []).map((faq: any, index: number) => (
-            <div 
-              key={index} 
-              className={`py-4 md:px-8 space-y-4 md:space-y-6 ${
-                index !== 0 ? 'md:border-l border-gray-100' : ''
-              }`}
-            >
-              <h2 className="text-[#1c2431] text-xl md:text-2xl font-extrabold leading-tight tracking-tighter uppercase">
-                {faq.question}
-              </h2>
-              <div className="h-px w-full bg-gray-50 md:hidden"></div>
-              <p className="text-gray-600 text-sm md:text-base leading-relaxed font-light">
-                {faq.answer}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* --- FOOTER CTA (Still have questions?) --- */}
-      {/* 2. Added mt-auto to force this section to the bottom and border-t for a clean separation */}
-      <section className="mt-auto bg-gray-50 py-10 px-6 border-t border-gray-100">
-        <div className="max-w-6xl mx-auto text-center flex flex-col sm:flex-row items-center justify-between gap-6">
-          <h2 className="text-xl font-bold text-[#1c2431]">Still have questions?</h2>
-          <a 
-            href="https://wa.me/60172082266" 
-            className="bg-[#25D366] text-white px-10 py-3 rounded-full font-bold text-sm uppercase tracking-widest hover:scale-105 transition-transform"
-          >
-            WhatsApp Us
-          </a>
-        </div>
+      <section className="mt-auto py-16 md:py-20 text-center px-6 border-t border-[#e3dbd0] bg-[#f5ebe1]">
+        <h2 className="text-[#212121] font-bold tracking-tight text-4xl md:text-5xl mb-10">
+          Still Have Questions?
+        </h2>
+        <a
+          href="https://wa.me/60172082266"
+          className="inline-block text-white px-14 md:px-16 py-5 md:py-6 rounded-full font-bold uppercase tracking-[0.12em] shadow-xl hover:brightness-95 hover:-translate-y-0.5 active:translate-y-0 transition-all"
+          style={{ backgroundColor: '#9b5744' }}
+        >
+          WhatsApp Us
+        </a>
       </section>
     </main>
   );
