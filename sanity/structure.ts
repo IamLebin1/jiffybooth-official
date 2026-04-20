@@ -30,9 +30,13 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('ourServices')
         .title('Our Services (Booths)'),
 
+      // 4. ALL EVENTS (List of Documents)
+      S.documentTypeListItem('ourEvents')
+        .title('Our Events'),
+
       S.divider(),
 
-      // 4. Contact Us Page (Single Document)
+      // 5. Contact Us Page (Single Document)
       S.listItem()
         .title('Contact Us Page')
         .id('contactPage')
@@ -42,7 +46,7 @@ export const structure: StructureResolver = (S) =>
             .documentId('contactPage')
         ),
 
-      // 5. FAQ Page (Single Document)
+      // 6. FAQ Page (Single Document)
       S.listItem()
         .title('FAQ Page')
         .id('faqPage')
@@ -52,13 +56,13 @@ export const structure: StructureResolver = (S) =>
             .documentId('faqPage')
         ),
 
-      // 6. LEGAL PAGES (List of Documents: Privacy, Terms, etc.)
+      // 7. LEGAL PAGES (List of Documents: Privacy, Terms, etc.)
       S.documentTypeListItem('legalPage')
         .title('Legal Pages (Privacy/Terms)'),
 
       S.divider(),
 
-      // 7. HEADER & FOOTER (Single Document)
+      // 8. HEADER & FOOTER (Single Document)
       S.listItem()
         .title('Header & Footer')
         .id('headerFooter')
@@ -71,6 +75,6 @@ export const structure: StructureResolver = (S) =>
       // Automatically hide document types from the "generic" list if they are managed above
       // ADDED 'legalPage' to this filter to keep the sidebar clean
       ...S.documentTypeListItems().filter(
-        (item) => !['mainPage', 'ourServices', 'aboutUs', 'team', 'contactPage', 'faqPage', 'photoboothPage', 'headerFooter', 'legalPage'].includes(item.getId()!)
+        (item) => !['mainPage', 'ourServices', 'ourEvents', 'aboutUs', 'team', 'contactPage', 'faqPage', 'photoboothPage', 'headerFooter', 'legalPage'].includes(item.getId()!)
       ),
     ])

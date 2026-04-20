@@ -9,59 +9,51 @@ export type EventType = {
 
 export const eventTypes: EventType[] = [
   {
-    title: 'Wedding Venue',
-    category: 'Wedding',
-    description: 'Venue styling, floral arches, and timeless reception experiences.',
-    image: '/wedding-sample.png',
-    slug: 'wedding-venue',
-    gallery: ['/wedding-sample.png', '/temp2.png', '/temp3.png', '/hero-background.jpg'],
+    title: "Weddings",
+    slug: "wedding-photographer",
+    category: "Private Event",
+    description: "Elegant, timeless, and fun. Give your guests a beautifully printed keepsake they will cherish forever.",
+    image: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1200&auto=format&fit=crop"
+    ]
   },
   {
-    title: 'Wedding Photographer',
-    category: 'Wedding',
-    description: 'Capture every emotion with premium photography packages.',
-    image: '/photo-booth-hero.jpg',
-    slug: 'wedding-photographer',
-    gallery: ['/photo-booth-hero.jpg', '/temp4.png', '/temp5.png', '/temp2.png'],
+    title: "Corporate Launches",
+    slug: "corporate-launch",
+    category: "Corporate",
+    description: "Amplify your brand presence with fully customizable photo experiences that your attendees will love to share.",
+    image: "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1511578314322-379afb476865?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1475721028070-2051152cb004?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=1200&auto=format&fit=crop"
+    ]
   },
   {
-    title: 'Caterer',
-    category: 'Birthday',
-    description: 'Curated menus designed for celebrations of every size.',
-    image: '/party-sample.png',
-    slug: 'caterer',
-    gallery: ['/party-sample.png', '/temp1.png', '/temp3.png', '/temp5.png'],
+    title: "Pet Parties",
+    slug: "pet-party",
+    category: "Specialty",
+    description: "Pawsitively perfect booths tailored for your furry friends. Capture their best angles with custom props.",
+    image: "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1530281700549-e82e7bf110d6?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1200&auto=format&fit=crop"
+    ]
   },
   {
-    title: 'Corporate Launch',
-    category: 'Corporate',
-    description: 'Executive planning and polished event production.',
-    image: '/corporate-sample.png',
-    slug: 'corporate-launch',
-    gallery: ['/corporate-sample.png', '/temp1.png', '/temp2.png', '/temp3.png'],
-  },
-  {
-    title: 'Pet Party',
-    category: 'Pet Parties',
-    description: 'Fun, pet-friendly gatherings designed for furry guests.',
-    image: '/temp4.png',
-    slug: 'pet-party',
-    gallery: ['/temp4.png', '/temp1.png', '/temp5.png', '/temp2.png'],
-  },
-  {
-    title: 'Festive Design',
-    category: 'Festives',
-    description: 'Themed décor and warm atmospheres for every season.',
-    image: '/temp5.png',
-    slug: 'festive-design',
-    gallery: ['/temp5.png', '/temp3.png', '/temp4.png', '/temp1.png'],
-  },
-  {
-    title: 'Baby Shower',
-    category: 'Babies',
-    description: 'Soft palettes and thoughtful details for milestone moments.',
-    image: '/temp1.png',
-    slug: 'baby-shower',
-    gallery: ['/temp1.png', '/temp2.png', '/temp3.png', '/temp5.png'],
-  },
+    title: "Private Galas",
+    slug: "private-gala",
+    category: "Private Event",
+    description: "Exclusive entertainment for birthdays, anniversaries, and VIP nights. Step in and strike a pose.",
+    image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop",
+    gallery: [
+      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=1200&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=1200&auto=format&fit=crop"
+    ]
+  }
 ];
