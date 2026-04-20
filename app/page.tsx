@@ -157,6 +157,7 @@ export default function Home() {
   // Derive the brands list: fall back to an empty array if none are set in Sanity
   const brands = pageData.brands && pageData.brands.length > 0 ? pageData.brands : [];
   const services = servicesData && servicesData.length > 0 ? servicesData : [];
+  const events = eventsData && eventsData.length > 0 ? eventsData : [];
   const eventCategories = pageData.categories && pageData.categories.length > 0 ? pageData.categories : [];
 
   return (
@@ -305,7 +306,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {eventTypes.slice(0, 4).map((item) => (
+            {events.slice(0, 4).map((item) => (
               <Link 
                 key={item.slug}
                 href={`/our-events/${item.slug}`} 

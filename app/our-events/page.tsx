@@ -1,19 +1,56 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
-import { eventTypes } from "./eventData";
+import { client } from "@/sanity/lib/client";
+
+type EventListItem = {
+  title: string;
+  category: string;
+  description: string;
+  image: string;
+  slug: string;
+};
 
 export default function OurEventsPage() {
   const [search, setSearch] = useState('');
+  const [events, setEvents] = useState<EventListItem[]>([]);
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        const data = await client
+          .withConfig({ useCdn: false })
+          .fetch(
+            `*[_type == "ourEvents"] | order(coalesce(order, 9999) asc, _createdAt asc) {
+              title,
+              category,
+              description,
+              "slug": slug.current,
+              "image": image.asset->url
+            }`,
+            {},
+            { cache: "no-store" }
+          );
+
+        setEvents((data || []).filter((item: EventListItem) => item?.slug));
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    }
+
+    fetchEvents();
+  }, []);
 
   const filteredEvents = useMemo(
-    () => eventTypes.filter((event) =>
+    () => events.filter((event) =>
       event.title.toLowerCase().includes(search.toLowerCase()) ||
       event.category.toLowerCase().includes(search.toLowerCase()) ||
       event.description.toLowerCase().includes(search.toLowerCase())
     ),
-    [search]
+    [events, search]
   );
 
   return (
