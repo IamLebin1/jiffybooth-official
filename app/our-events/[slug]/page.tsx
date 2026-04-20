@@ -1,10 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { eventTypes } from "../eventData";
+import { client } from "@/sanity/lib/client";
 
-export function generateStaticParams() {
-  return eventTypes.map((event) => ({ slug: event.slug }));
+type EventDetail = {
+  title: string;
+  category: string;
+  description: string;
+  slug: string;
+  gallery: string[];
+};
+
+export async function generateStaticParams() {
+  const slugs = await client.fetch(
+    `*[_type == "ourEvents" && defined(slug.current)]{ "slug": slug.current }`
+  );
+
+  return (slugs || []).map((event: { slug: string }) => ({ slug: event.slug }));
 }
 
 type Params = {
@@ -15,11 +27,24 @@ type Params = {
 
 export default async function EventDetailPage({ params }: Params) {
   const { slug } = await params;
-  const event = eventTypes.find((item) => item.slug === slug);
+
+  const event = await client.fetch<EventDetail | null>(
+    `*[_type == "ourEvents" && slug.current == $slug][0] {
+      title,
+      category,
+      description,
+      "slug": slug.current,
+      "gallery": gallery[].asset->url
+    }`,
+    { slug },
+    { cache: "no-store" }
+  );
 
   if (!event) {
     notFound();
   }
+
+  const galleryImages = event.gallery && event.gallery.length > 0 ? event.gallery : [];
 
   return (
     <main className="min-h-screen bg-white text-slate-900 font-inter">
@@ -57,7 +82,7 @@ export default async function EventDetailPage({ params }: Params) {
 
       <section className="max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {event.gallery.map((image, index) => (
+          {galleryImages.map((image, index) => (
             <div
               key={index}
               className="group relative h-96 overflow-hidden bg-slate-950 shadow-2xl"
@@ -79,6 +104,12 @@ export default async function EventDetailPage({ params }: Params) {
             </div>
           ))}
         </div>
+
+        {galleryImages.length === 0 && (
+          <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500">
+            Gallery images will appear here once added in Sanity Studio.
+          </div>
+        )}
       </section>
     </main>
   );

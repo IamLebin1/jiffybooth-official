@@ -35,6 +35,7 @@ export default function Home() {
   const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
   const [pageData, setPageData] = useState<any>(null);
   const [servicesData, setServicesData] = useState<any[]>([]);
+  const [eventsData, setEventsData] = useState<any[]>([]);
   const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
   // --- 1. DATA FETCHING ---
@@ -57,6 +58,13 @@ export default function Home() {
               description,
               "slug": slug.current,
               "image": image.asset->url
+            },
+            "events": *[_type == "ourEvents"] | order(_createdAt asc) {
+              title,
+              category,
+              description,
+              "slug": slug.current,
+              "image": image.asset->url
             }
           }`, 
           {}, 
@@ -67,6 +75,7 @@ export default function Home() {
         );
         setPageData(data?.mainPage || null);
         setServicesData(data?.services || []);
+        setEventsData(data?.events || []);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
       }
@@ -148,6 +157,8 @@ export default function Home() {
   // Derive the brands list: fall back to an empty array if none are set in Sanity
   const brands = pageData.brands && pageData.brands.length > 0 ? pageData.brands : [];
   const services = servicesData && servicesData.length > 0 ? servicesData : [];
+  const events = eventsData && eventsData.length > 0 ? eventsData : [];
+  const eventCategories = pageData.categories && pageData.categories.length > 0 ? pageData.categories : [];
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -275,6 +286,68 @@ export default function Home() {
           </div>
         </section>
       )}
+
+      {/* --- OUR EVENTS PREVIEW SECTION --- */}
+      <section className="py-16 md:py-24 px-6 bg-white border-t border-[#ddd0be]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-14 gap-6">
+            <div className="max-w-2xl">
+              <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Events</p>
+              <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
+                Moments Worth Capturing.
+              </h2>
+            </div>
+            <Link 
+              href="/our-events" 
+              className="hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#9b5744] hover:text-jiffy-dark transition-colors"
+            >
+              View All Events <span className="text-lg">→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {events.slice(0, 4).map((item) => (
+              <Link 
+                key={item.slug}
+                href={`/our-events/${item.slug}`} 
+                className="group relative block h-[400px] overflow-hidden rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-500"
+              >
+                <div className="absolute inset-0 bg-stone-200">
+                  <Image 
+                    src={item.image} 
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-jiffy-dark/90 via-jiffy-dark/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                <div className="absolute inset-0 p-8 flex flex-col justify-end text-white z-10">
+                  <div className="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <p className="text-[#e8dfd2] text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                      {item.category}
+                    </p>
+                    <h3 className="text-2xl font-bold tracking-tight mb-2">
+                      {item.title}
+                    </h3>
+                    <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">
+                      Explore <span className="text-orange-400">→</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          <div className="mt-10 text-center md:hidden">
+            <Link 
+              href="/our-events" 
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#9b5744] hover:text-jiffy-dark transition-colors"
+            >
+              View All Events <span className="text-lg">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
