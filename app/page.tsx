@@ -148,6 +148,7 @@ export default function Home() {
   // Derive the brands list: fall back to an empty array if none are set in Sanity
   const brands = pageData.brands && pageData.brands.length > 0 ? pageData.brands : [];
   const services = servicesData && servicesData.length > 0 ? servicesData : [];
+  const eventCategories = pageData.categories && pageData.categories.length > 0 ? pageData.categories : [];
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -269,6 +270,85 @@ export default function Home() {
                       </div>
                     </article>
                   </Link>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* --- EVENT TYPE SECTION --- */}
+      {eventCategories.length > 0 && (
+        <section className="bg-[#efe7dc] py-16 md:py-24 px-6 scroll-mt-24">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+              <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Event Type</p>
+              <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
+                Perfect For Every Celebration
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-10">
+              {eventCategories.map((category: any, index: number) => {
+                const slug = category?.slug?.current;
+                const cardContent = (
+                  <article className="h-full rounded-[2rem] overflow-hidden bg-white border border-[#dbcbb7] shadow-sm transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
+                    <div className="relative h-[250px] md:h-[280px] w-full overflow-hidden">
+                      {category.image ? (
+                        <Image
+                          src={urlFor(category.image).url()}
+                          alt={category.title || `Event Type ${index + 1}`}
+                          fill
+                          className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-gradient-to-br from-[#f5ebe1] to-[#e7cfb4] flex items-center justify-center px-6 text-center">
+                          <p className="text-jiffy-dark font-bold text-lg md:text-xl tracking-tight">
+                            {category.title || 'Event Type'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-6 md:p-7">
+                      <h3 className="font-inter italic text-xl md:text-2xl text-jiffy-dark mb-2">
+                        {category.title}
+                      </h3>
+
+                      {category.subheading && (
+                        <p className="text-jiffy-dark/70 text-xs md:text-sm uppercase tracking-[0.18em] mb-3">
+                          {category.subheading}
+                        </p>
+                      )}
+
+                      <p className="text-sm md:text-[15px] leading-relaxed text-jiffy-dark/85">
+                        {category.description}
+                      </p>
+
+                      <div className="mt-5 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
+                        Explore
+                        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+                      </div>
+                    </div>
+                  </article>
+                );
+
+                if (slug) {
+                  return (
+                    <Link
+                      key={index}
+                      href={`/services/${slug}`}
+                      className="group block text-jiffy-dark"
+                    >
+                      {cardContent}
+                    </Link>
+                  );
+                }
+
+                return (
+                  <div key={index} className="group block text-jiffy-dark">
+                    {cardContent}
+                  </div>
                 );
               })}
             </div>
