@@ -55,6 +55,7 @@ export default function OurEventsPage() {
 
   return (
     <main className="min-h-screen bg-white text-slate-900 font-inter">
+    
       <section className="bg-white py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-sm uppercase tracking-[0.35em] text-orange-500 mb-4">Discover Your Event Dream Team</p>
@@ -158,6 +159,6 @@ export default function OurEventsPage() {
         </Link>
       </section>
 
-    </div>
+    </main>
   );
 }
