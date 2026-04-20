@@ -63,6 +63,7 @@ export default function OurEventsPage() {
           <p className="mt-4 text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
             Looking for top event professionals? Browse curated event types with the best planning, design, and execution support.
           </p>
+          <br></br>
           
           {/* --- SEARCH BAR --- */}
           <div className="max-w-xl mx-auto relative group">
