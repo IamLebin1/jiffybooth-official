@@ -35,6 +35,7 @@ export default function Home() {
   const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
   const [pageData, setPageData] = useState<any>(null);
   const [servicesData, setServicesData] = useState<any[]>([]);
+  const [eventsData, setEventsData] = useState<any[]>([]);
   const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
   // --- 1. DATA FETCHING ---
@@ -57,6 +58,13 @@ export default function Home() {
               description,
               "slug": slug.current,
               "image": image.asset->url
+            },
+            "events": *[_type == "ourEvents"] | order(_createdAt asc) {
+              title,
+              category,
+              description,
+              "slug": slug.current,
+              "image": image.asset->url
             }
           }`, 
           {}, 
@@ -67,6 +75,7 @@ export default function Home() {
         );
         setPageData(data?.mainPage || null);
         setServicesData(data?.services || []);
+        setEventsData(data?.events || []);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
       }
@@ -277,84 +286,67 @@ export default function Home() {
         </section>
       )}
 
-      {/* --- EVENT TYPE SECTION --- */}
-      {eventCategories.length > 0 && (
-        <section className="bg-[#efe7dc] py-16 md:py-24 px-6 scroll-mt-24">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
-              <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Event Type</p>
+      {/* --- OUR EVENTS PREVIEW SECTION --- */}
+      <section className="py-16 md:py-24 px-6 bg-white border-t border-[#ddd0be]">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-14 gap-6">
+            <div className="max-w-2xl">
+              <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Events</p>
               <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
-                Perfect For Every Celebration
+                Moments Worth Capturing.
               </h2>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8 xl:gap-10">
-              {eventCategories.map((category: any, index: number) => {
-                const slug = category?.slug?.current;
-                const cardContent = (
-                  <article className="h-full rounded-[2rem] overflow-hidden bg-white border border-[#dbcbb7] shadow-sm transition-all duration-500 group-hover:-translate-y-2 group-hover:shadow-xl">
-                    <div className="relative h-[250px] md:h-[280px] w-full overflow-hidden">
-                      {category.image ? (
-                        <Image
-                          src={urlFor(category.image).url()}
-                          alt={category.title || `Event Type ${index + 1}`}
-                          fill
-                          className="object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-[#f5ebe1] to-[#e7cfb4] flex items-center justify-center px-6 text-center">
-                          <p className="text-jiffy-dark font-bold text-lg md:text-xl tracking-tight">
-                            {category.title || 'Event Type'}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-6 md:p-7">
-                      <h3 className="font-inter italic text-xl md:text-2xl text-jiffy-dark mb-2">
-                        {category.title}
-                      </h3>
-
-                      {category.subheading && (
-                        <p className="text-jiffy-dark/70 text-xs md:text-sm uppercase tracking-[0.18em] mb-3">
-                          {category.subheading}
-                        </p>
-                      )}
-
-                      <p className="text-sm md:text-[15px] leading-relaxed text-jiffy-dark/85">
-                        {category.description}
-                      </p>
-
-                      <div className="mt-5 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
-                        Explore
-                        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-                      </div>
-                    </div>
-                  </article>
-                );
-
-                if (slug) {
-                  return (
-                    <Link
-                      key={index}
-                      href={`/services/${slug}`}
-                      className="group block text-jiffy-dark"
-                    >
-                      {cardContent}
-                    </Link>
-                  );
-                }
-
-                return (
-                  <div key={index} className="group block text-jiffy-dark">
-                    {cardContent}
-                  </div>
-                );
-              })}
-            </div>
+            <Link 
+              href="/our-events" 
+              className="hidden md:inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#9b5744] hover:text-jiffy-dark transition-colors"
+            >
+              View All Events <span className="text-lg">→</span>
+            </Link>
           </div>
-        </section>
-      )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {eventTypes.slice(0, 4).map((item) => (
+              <Link 
+                key={item.slug}
+                href={`/our-events/${item.slug}`} 
+                className="group relative block h-[400px] overflow-hidden rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-500"
+              >
+                <div className="absolute inset-0 bg-stone-200">
+                  <Image 
+                    src={item.image} 
+                    alt={item.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                  />
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-jiffy-dark/90 via-jiffy-dark/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
+                <div className="absolute inset-0 p-8 flex flex-col justify-end text-white z-10">
+                  <div className="transform translate-y-6 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+                    <p className="text-[#e8dfd2] text-[10px] font-bold uppercase tracking-[0.3em] mb-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                      {item.category}
+                    </p>
+                    <h3 className="text-2xl font-bold tracking-tight mb-2">
+                      {item.title}
+                    </h3>
+                    <span className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] font-bold text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-150">
+                      Explore <span className="text-orange-400">→</span>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          
+          <div className="mt-10 text-center md:hidden">
+            <Link 
+              href="/our-events" 
+              className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-[#9b5744] hover:text-jiffy-dark transition-colors"
+            >
+              View All Events <span className="text-lg">→</span>
+            </Link>
+          </div>
+        </div>
+      </section>
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
@@ -535,7 +527,7 @@ export default function Home() {
       {/* --- FOOTER CTA --- */}
       <section className="py-24 text-center">
         <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-10">Ready to Book?</h2>
-        <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-[#844a39] hover:scale-105 active:scale-95 transition-all">Book Now</Link>
+        <Link href="/contact-us" className="inline-block bg-orange-500 text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-orange-600 hover:scale-105 active:scale-95 transition-all">Book Now</Link>
       </section>
 
       <style jsx global>{`
