@@ -22,7 +22,7 @@ export default async function OurServicesPage() {
       {/* --- HEADER --- */}
       <section className="bg-[#2c343f] py-10 px-6">
         <div className="max-w-6xl mx-auto">
-          <h1 className="text-white text-3xl font-bold">Our Services</h1>
+          <h1 className="section-title text-white">Our Services</h1>
           <div className="h-1 w-12 bg-blue-400 mt-1 rounded-full"></div>
         </div>
       </section>
@@ -68,7 +68,7 @@ export default async function OurServicesPage() {
 
       {/* --- PAGE CTA --- */}
       <section className="py-20 md:py-24 text-center px-6">
-        <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-5xl mb-10">
+        <h2 className="section-title mb-10">
           Ready to Capture the Moment?
         </h2>
         <Link

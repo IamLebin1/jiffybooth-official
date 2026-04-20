@@ -22,7 +22,7 @@ export default function OurEventsPage() {
       <section className="bg-white py-20 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-sm uppercase tracking-[0.35em] text-orange-500 mb-4">Discover Your Event Dream Team</p>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">Discover Your Event Dream Team</h1>
+          <h1 className="section-title text-slate-900">Discover Your Event Dream Team</h1>
           <p className="mt-4 text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
             Looking for top event professionals? Browse curated event types with the best planning, design, and execution support.
           </p>

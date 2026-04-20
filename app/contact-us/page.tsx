@@ -112,7 +112,7 @@ export default function ContactPage() {
       <section className="bg-[#2c343f] py-6 md:py-10 px-6 sm:px-12 lg:px-16">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-white text-2xl md:text-3xl font-bold tracking-tight">
+            <h1 className="section-title text-white">
               Contact Us
             </h1>
             <div className="h-1 w-12 bg-blue-400 mt-1 rounded-full hidden md:block"></div>
@@ -183,7 +183,7 @@ export default function ContactPage() {
           {/* LEFT: TIMELINE */}
           <div className="flex-1 w-full relative">
             <div className="absolute top-0 -left-10 text-[10rem] font-black text-gray-50 -z-10 select-none pointer-events-none uppercase">STEPS</div>
-            <h2 className="text-[#a0522d] text-3xl md:text-4xl font-bold tracking-tight mb-10 uppercase">
+            <h2 className="section-title mb-10 text-[#a0522d]">
               {data?.bookingTitle || "How to Book?"}
             </h2>
             <div className="relative">
@@ -206,7 +206,7 @@ export default function ContactPage() {
           {/* RIGHT: FORM */}
           <div id="contact-form" ref={formSectionRef} className="flex-1 lg:max-w-xl scroll-mt-24">
             <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl text-jiffy-dark border border-gray-100">
-              <h2 className="text-3xl font-bold mb-8 uppercase tracking-tighter text-[#2c343f]">Quotation Request</h2>
+              <h2 className="section-title mb-8 text-[#2c343f]">Quotation Request</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">

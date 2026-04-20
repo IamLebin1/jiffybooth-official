@@ -212,16 +212,16 @@ export default function Home() {
 
       {/* --- SERVICE GRID SECTION --- */}
       {services.length > 0 && (
-        <section className="bg-[#b9b2a6] py-16 md:py-24 px-6 scroll-mt-24">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-14">
+        <section className="bg-[#b9b2a6] py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 scroll-mt-24">
+          <div className="max-w-[1240px] 2xl:max-w-[1680px] mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10 lg:mb-12">
               <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Services</p>
-              <h2 className="font-inter font-bold text-jiffy-dark text-3xl md:text-5xl lg:text-6xl leading-tight">
+              <h2 className="section-title leading-tight">
                 A Booth for All Occasions
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 xl:gap-10">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-7 xl:gap-8">
               {services.map((service: any, index: number) => {
                 const slug = service?.slug || `service-${index + 1}`;
 
@@ -231,7 +231,7 @@ export default function Home() {
                     href={`/services/${slug}`}
                     className="group block text-jiffy-dark"
                   >
-                    <article className="space-y-4 h-full">
+                    <article className="space-y-3 h-full">
                       <div className="overflow-hidden rounded-[2rem] transition-transform duration-500 group-hover:-translate-y-2">
                         {service.image ? (
                           <Image
@@ -239,10 +239,10 @@ export default function Home() {
                             alt={service.title}
                             width={800}
                             height={1000}
-                            className="h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            className="h-[260px] md:h-[280px] lg:h-[240px] xl:h-[260px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="h-[320px] w-full bg-gradient-to-br from-[#f5ebe1] to-[#e7cfb4] flex items-center justify-center px-6 text-center border border-[#d9c0a3]">
+                          <div className="h-[260px] md:h-[280px] lg:h-[240px] xl:h-[260px] w-full bg-gradient-to-br from-[#f5ebe1] to-[#e7cfb4] flex items-center justify-center px-6 text-center border border-[#d9c0a3]">
                             <div>
                               <p className="text-jiffy-dark font-bold text-lg md:text-xl tracking-tight">
                                 {service.title}
@@ -256,13 +256,13 @@ export default function Home() {
                       </div>
 
                       <div className="px-1">
-                        <h3 className="font-inter italic text-xl md:text-2xl text-jiffy-dark mb-3">
+                        <h3 className="font-inter italic text-xl md:text-2xl lg:text-xl xl:text-2xl text-jiffy-dark mb-2">
                           {service.title}
                         </h3>
-                        <p className="text-sm md:text-[15px] leading-relaxed text-jiffy-dark/85">
+                        <p className="text-sm md:text-[15px] lg:text-[13px] xl:text-sm leading-relaxed text-jiffy-dark/85">
                           {service.description}
                         </p>
-                        <div className="mt-5 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
+                        <div className="mt-4 inline-flex items-center gap-2 text-xs md:text-sm uppercase tracking-[0.2em] font-bold text-jiffy-dark">
                           Learn More
                           <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
                         </div>
@@ -278,7 +278,7 @@ export default function Home() {
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
-<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="text-jiffy-dark font-bold text-center text-3xl md:text-[clamp(32px,4vw,48px)]">
+<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="section-title">
             Our Templates
           </h2>
         </div>
@@ -327,7 +327,7 @@ export default function Home() {
       {/* --- USP SECTION --- */}
       <section className="bg-[#e8dfd2] py-8 md:py-10 border-y border-[#ddd0be]">
         <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
-          <h2 className="text-center text-jiffy-dark font-black uppercase tracking-tight text-2xl md:text-3xl mb-7 md:mb-8">
+          <h2 className="section-title mb-7 md:mb-8">
             Why Jiffy Booth
           </h2>
 
@@ -388,7 +388,7 @@ export default function Home() {
         <section className="bg-slate-50 py-24 md:py-32 overflow-hidden border-y border-gray-100">
           <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
             <div className="text-center mb-16">
-              <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-4">What Our Clients Say</h2>
+              <h2 className="section-title mb-4">What Our Clients Say</h2>
               <div className="h-1.5 w-24 bg-jiffy-dark mx-auto rounded-full opacity-20" />
             </div>
 
@@ -428,7 +428,7 @@ export default function Home() {
       <section className="bg-white py-20 md:py-32 border-y border-gray-100 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
           <div className="mb-16">
-            <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-[clamp(36px,4vw,56px)] mb-4">
+            <h2 className="section-title mb-4">
               Trusted By
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto font-light">
@@ -454,7 +454,7 @@ export default function Home() {
 
       {/* --- FOOTER CTA --- */}
       <section className="py-24 text-center">
-        <h2 className="text-jiffy-dark font-inter font-bold tracking-tight text-4xl md:text-5xl mb-10">Ready to Book?</h2>
+        <h2 className="section-title mb-10">Ready to Book?</h2>
         <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-[#844a39] hover:scale-105 active:scale-95 transition-all">Book Now</Link>
       </section>
 

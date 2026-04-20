@@ -26,7 +26,7 @@ export default async function EventDetailPage({ params }: Params) {
       <section className="bg-slate-50 py-16 px-6">
         <div className="max-w-6xl mx-auto text-center">
           <p className="text-sm uppercase tracking-[0.35em] text-orange-500 mb-4">Event Gallery</p>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">{event.title}</h1>
+          <h1 className="section-title text-slate-900">{event.title}</h1>
           <p className="mt-4 text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
             {event.description}
           </p>

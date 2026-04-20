@@ -37,7 +37,7 @@ export default function FAQPage() {
     <main className="min-h-screen flex flex-col bg-[#f5ebe1] text-[#212121] overflow-x-hidden">
       <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pt-20 md:pt-24 pb-10 md:pb-12">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-none mb-7">
+          <h1 className="section-title leading-none mb-7">   
             {data?.title || "Frequently Asked Questions"}
           </h1>
           <hr className="w-full max-w-3xl mx-auto border-[#e3dbd0]" />
@@ -52,7 +52,7 @@ export default function FAQPage() {
         )}
 
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-[#212121] uppercase text-xl md:text-2xl tracking-wide font-bold mb-6 md:mb-8">
+          <h2 className="section-title mb-6 md:mb-8 text-[#212121]">
             General
           </h2>
 
@@ -106,7 +106,7 @@ export default function FAQPage() {
       </section>
 
       <section className="mt-auto py-16 md:py-20 text-center px-6 border-t border-[#e3dbd0] bg-[#f5ebe1]">
-        <h2 className="text-[#212121] font-bold tracking-tight text-4xl md:text-5xl mb-10">
+        <h2 className="section-title mb-10 text-[#212121]">
           Still Have Questions?
         </h2>
         <a

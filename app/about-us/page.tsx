@@ -54,8 +54,7 @@ export default function AboutPage() {
         
         {/* Text Content */}
         <div className="flex-1 space-y-8 text-left z-10 max-w-md lg:max-w-lg">
-          <h2 className="text-[#1c2431] font-bold leading-[1.1] md:leading-[0.9] tracking-tighter 
-                         text-4xl sm:text-5xl md:text-[clamp(48px,6vw,96px)]">
+          <h2 className="section-title leading-[1.1] md:leading-[0.9]">
             {/* FIXED: Using 'pageTitle' from your schema */}
             {sanityTeam.pageTitle || "The Team Behind Your Favorite Memories"}
           </h2>
@@ -142,7 +141,7 @@ export default function AboutPage() {
             
 
             <div className="pt-6 text-left space-y-4">
-              <h4 className="text-[#1c2431] font-bold tracking-tight text-3xl md:text-4xl">
+              <h4 className="section-title">
                 Our Mission
               </h4>
               <p className="text-black text-[15px] md:text-base leading-[1.5]">

@@ -32,12 +32,12 @@ export default function AdvicePage() {
   return (
     <main className="min-h-screen bg-[#f3f1ee] text-jiffy-dark font-inter">
       <section className="max-w-6xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 pt-14 md:pt-16 pb-14 md:pb-16">
-        <h1 className="text-[#9b5744] text-base md:text-lg uppercase tracking-[0.28em] font-bold mb-6 md:mb-8">
+        <h1 className="section-title mb-6 md:mb-8">
           Articles
         </h1>
 
         <div className="flex items-end justify-between gap-4 border-b border-[#ddd6cd] pb-6 mb-8">
-          <h2 className="text-[clamp(1.65rem,3.4vw,2.8rem)] font-medium tracking-tight leading-none">Recently Published</h2>
+          <h2 className="section-title leading-none">Recently Published</h2>
           <button className="text-[#9b5744] text-base md:text-xl font-medium tracking-tight hover:opacity-80 transition-opacity">
             View All
           </button>
@@ -72,7 +72,7 @@ export default function AdvicePage() {
       </section>
 
       <section className="max-w-6xl mx-auto px-6 sm:px-8 md:px-10 lg:px-12 py-20 md:py-24 text-center">
-        <h2 className="text-jiffy-dark font-bold tracking-tight text-4xl md:text-5xl mb-10">Need Help Planning Your Setup?</h2>
+        <h2 className="section-title mb-10">Need Help Planning Your Setup?</h2>
         <Link
           href="/contact-us#contact-form"
           className="inline-block text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"

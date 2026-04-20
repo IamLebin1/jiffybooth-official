@@ -30,7 +30,7 @@ export default async function TermsOfService() {
       
       {/* --- HEADER SECTION --- */}
       <section className="bg-[#2c343f] pt-10 pb-10 px-6 text-center">
-        <h1 className="text-white text-5xl md:text-7xl font-bold tracking-tighter uppercase italic">
+        <h1 className="section-title text-white italic">
           {data.title}
         </h1>
         <div className="w-24 h-1.5 bg-[#5a87b3] mx-auto mt-8 opacity-50 rounded-full" />
@@ -50,7 +50,7 @@ export default async function TermsOfService() {
         <div className="space-y-12">
           {data.sections?.map((item: any, index: number) => (
             <div key={index} className="space-y-6">
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-[#1c2431] uppercase">
+              <h2 className="section-title text-[#1c2431]">
                 {item.heading}
               </h2>
               {/* whitespace-pre-wrap preserves formatting from the Sanity text area */}
