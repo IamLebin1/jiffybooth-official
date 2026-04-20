@@ -232,7 +232,8 @@ export default function Home() {
               </h2>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-5 gap-6 lg:gap-7 xl:gap-8">
+            <div className="services-scroll overflow-x-auto pb-4">
+              <div className="flex flex-nowrap gap-6 lg:gap-7 xl:gap-8 min-w-max">
               {services.map((service: any, index: number) => {
                 const slug = service?.slug || `service-${index + 1}`;
 
@@ -240,7 +241,7 @@ export default function Home() {
                   <Link
                     key={index}
                     href={`/services/${slug}`}
-                    className="group block text-jiffy-dark"
+                    className="group block text-jiffy-dark shrink-0 w-[250px] sm:w-[280px] lg:w-[260px] xl:w-[280px]"
                   >
                     <article className="space-y-3 h-full">
                       <div className="overflow-hidden rounded-[2rem] transition-transform duration-500 group-hover:-translate-y-2">
@@ -267,7 +268,7 @@ export default function Home() {
                       </div>
 
                       <div className="px-1">
-                        <h3 className="font-inter italic text-xl md:text-2xl lg:text-xl xl:text-2xl text-jiffy-dark mb-2">
+                        <h3 className="font-inter text-xl md:text-2xl lg:text-xl xl:text-2xl text-jiffy-dark mb-2">
                           {service.title}
                         </h3>
                         <p className="text-sm md:text-[15px] lg:text-[13px] xl:text-sm leading-relaxed text-jiffy-dark/85">
@@ -282,6 +283,7 @@ export default function Home() {
                   </Link>
                 );
               })}
+              </div>
             </div>
           </div>
         </section>
@@ -613,6 +615,25 @@ export default function Home() {
         }
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Our Services horizontal scroll bar */
+        .services-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #213244 rgba(108, 120, 146, 0.22);
+        }
+        .services-scroll::-webkit-scrollbar {
+          height: 6px;
+        }
+        .services-scroll::-webkit-scrollbar-track {
+          background: rgba(155, 87, 68, 0.22);
+        }
+        .services-scroll::-webkit-scrollbar-thumb {
+          background: #9b5744;
+          border-radius: 999px;
+        }
+        .services-scroll::-webkit-scrollbar-thumb:hover {
+          background: #9b5744;
+        }
 
         /* Testimonial scrollbar styling preserved exactly from your code */
         .testimonial-scroll::-webkit-scrollbar { height: 4px; }

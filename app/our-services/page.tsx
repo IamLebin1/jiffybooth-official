@@ -20,10 +20,17 @@ export default async function OurServicesPage() {
   return (
     <main className="min-h-screen bg-white font-inter">
       {/* --- HEADER --- */}
-      <section className="bg-[#2c343f] py-10 px-6">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="section-title text-white">Our Services</h1>
-          <div className="h-1 w-12 bg-blue-400 mt-1 rounded-full"></div>
+      <section className="px-6 pt-14 md:pt-20 pb-8 md:pb-10">
+        <div className="max-w-6xl mx-auto text-center">
+          <h1 className="mt-3 text-jiffy-dark font-black tracking-tight text-4xl md:text-6xl leading-[0.95]">
+            Our Services
+          </h1>
+          <p className="mt-4 text-jiffy-dark/70 text-sm md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Choose from premium booth experiences designed to match your event style and create unforgettable memories.
+          </p>
+          <div className="mt-6 flex justify-center">
+            <span className="h-1 w-24 rounded-full bg-[#9b5744]/70" />
+          </div>
         </div>
       </section>
 

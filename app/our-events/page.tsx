@@ -158,6 +158,6 @@ export default function OurEventsPage() {
         </Link>
       </section>
 
-    </div>
+    </main>
   );
 }
