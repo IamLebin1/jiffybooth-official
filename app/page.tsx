@@ -234,7 +234,7 @@ export default function Home() {
 
       {/* --- SERVICE GRID SECTION --- */}
       {services.length > 0 && (
-        <section className="bg-[#b9b2a6] py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 scroll-mt-24">
+        <section className="bg-[#e8dfd2] py-12 md:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 xl:px-10 scroll-mt-24">
           <div className="max-w-[1240px] 2xl:max-w-[1680px] mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-8 md:mb-10 lg:mb-12">
               <p className="text-jiffy-dark/70 uppercase tracking-[0.35em] text-xs md:text-sm mb-4">Our Services</p>
