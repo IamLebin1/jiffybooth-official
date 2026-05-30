@@ -77,7 +77,6 @@ export default async function OurServicesPage() {
             No services found. Create one in Sanity to see it here.
           </div>
         )}
-        </div>
       </section>
 
       {/* --- PAGE CTA --- */}

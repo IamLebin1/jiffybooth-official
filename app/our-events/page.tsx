@@ -136,6 +136,7 @@ export default function OurEventsPage() {
                   </svg>
                 </span>
                 <input
+                  suppressHydrationWarning
                   type="text"
                   value={categorySearch}
                   onChange={(e) => setCategorySearch(e.target.value)}
