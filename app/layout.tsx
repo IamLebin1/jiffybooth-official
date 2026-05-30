@@ -98,7 +98,7 @@ export default function RootLayout({
                 tagline,
                 socialLinks,
                 copyrightText,
-                "footerLinks": footerLinks[]-> {
+                "footerLinks": *[_type == "ourServices"] | order(order asc) {
                   "name": title,
                   "href": "/services/" + slug.current
                 }
@@ -379,12 +379,12 @@ export default function RootLayout({
               {/* --- ENQUIRY FORM --- */}
               {!isContactPage && (
                 <div className="flex-1 lg:max-w-xl">
-                  <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl text-jiffy-dark">
-                    <h2 className="text-3xl font-bold mb-8 uppercase tracking-tighter">Quotation Request</h2>
+                  <div className="bg-white rounded-[2rem] p-5 md:p-10 shadow-2xl text-jiffy-dark">
+                    <h2 className="text-2xl md:text-3xl font-bold mb-5 md:mb-8 uppercase tracking-tighter">Quotation Request</h2>
                     
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="space-y-2">
-                        <label className="font-bold block text-sm uppercase tracking-wider">Name:</label>
+                    <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+                      <div className="space-y-1.5 md:space-y-2">
+                        <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Name:</label>
                         <input 
                           name="name"
                           type="text" 
@@ -392,13 +392,13 @@ export default function RootLayout({
                           onChange={handleChange}
                           placeholder="Your Full Name" 
                           required
-                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none focus:border-jiffy-dark/30 transition-colors" 
+                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-jiffy-dark/30 transition-colors" 
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="font-bold block text-sm uppercase tracking-wider">Tel:</label>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-6">
+                        <div className="space-y-1.5 md:space-y-2">
+                          <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Tel:</label>
                           <input 
                             name="tel"
                             type="tel" 
@@ -406,11 +406,11 @@ export default function RootLayout({
                             onChange={handleChange}
                             placeholder="Phone Number" 
                             required
-                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none focus:border-jiffy-dark/30 transition-colors" 
+                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-jiffy-dark/30 transition-colors" 
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label className="font-bold block text-sm uppercase tracking-wider">Email:</label>
+                        <div className="space-y-1.5 md:space-y-2">
+                          <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Email:</label>
                           <input 
                             name="email"
                             type="email" 
@@ -418,13 +418,13 @@ export default function RootLayout({
                             onChange={handleChange}
                             placeholder="Email Address" 
                             required
-                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none focus:border-jiffy-dark/30 transition-colors" 
+                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-jiffy-dark/30 transition-colors" 
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="font-bold block text-sm uppercase tracking-wider">Event:</label>
+                      <div className="space-y-1.5 md:space-y-2">
+                        <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Event:</label>
                         <input 
                           name="event"
                           type="text" 
@@ -432,49 +432,49 @@ export default function RootLayout({
                           onChange={handleChange}
                           placeholder="e.g. Wedding, Corporate Launch" 
                           required
-                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none focus:border-jiffy-dark/30 transition-colors" 
+                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-jiffy-dark/30 transition-colors" 
                         />
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="font-bold block text-sm uppercase tracking-wider">Date:</label>
+                      <div className="grid grid-cols-2 gap-2 md:gap-6">
+                        <div className="space-y-1.5 md:space-y-2">
+                          <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Date:</label>
                           <input 
                             name="date"
                             type="date" 
                             value={formData.date}
                             onChange={handleChange}
                             required
-                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-jiffy-dark/30 transition-colors" 
+                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none text-gray-500 focus:border-jiffy-dark/30 transition-colors" 
                           />
                         </div>
-                        <div className="space-y-2">
-                          <label className="font-bold block text-sm uppercase tracking-wider">Time:</label>
+                        <div className="space-y-1.5 md:space-y-2">
+                          <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Time:</label>
                           <input 
                             name="time"
                             type="time" 
                             value={formData.time}
                             onChange={handleChange}
-                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-jiffy-dark/30 transition-colors" 
+                            className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none text-gray-500 focus:border-jiffy-dark/30 transition-colors" 
                           />
                         </div>
                       </div>
 
-                      <div className="space-y-2">
-                        <label className="font-bold block text-sm uppercase tracking-wider">Description:</label>
+                      <div className="space-y-1.5 md:space-y-2">
+                        <label className="font-bold block text-xs md:text-sm uppercase tracking-wider">Description:</label>
                         <textarea 
                           name="description"
-                          rows={4} 
+                          rows={3} 
                           value={formData.description}
                           onChange={handleChange}
                           placeholder="Tell us more about your event (duration, theme, etc.)" 
-                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-3 outline-none resize-none focus:border-jiffy-dark/30 transition-colors"
+                          className="w-full bg-gray-100 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none resize-none focus:border-jiffy-dark/30 transition-colors"
                         ></textarea>
                       </div>
 
                       <button 
                         type="submit"
-                        className="w-full bg-jiffy-dark text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-normal text-sm hover:bg-black transition-all active:scale-[0.98]"                      >
+                        className="w-full bg-jiffy-dark text-white font-bold py-3 md:py-4 rounded-xl mt-2 md:mt-4 uppercase tracking-normal text-sm hover:bg-black transition-all active:scale-[0.98]"                      >
                         {status === 'success' ? 'Opening WhatsApp...' : 'Submit via WhatsApp'}
                       </button>
                     </form>

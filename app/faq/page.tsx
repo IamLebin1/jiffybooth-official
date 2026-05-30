@@ -31,32 +31,29 @@ export default function FAQPage() {
 
   const faqs = data?.faqs || [];
 
-  if (loading) return <div className="min-h-screen bg-[#f5ebe1]" />;
+  if (loading) return <div className="min-h-screen bg-[#f3f1ee]" />;
 
   return (
-    <main className="min-h-screen flex flex-col bg-[#f5ebe1] text-[#212121] overflow-x-hidden">
-      <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pt-20 md:pt-24 pb-10 md:pb-12">
+    <main className="min-h-screen flex flex-col bg-[#f3f1ee] text-[#212121] overflow-x-hidden">
+      <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pt-20 md:pt-24 pb-4 md:pb-6">
         <div className="text-center max-w-4xl mx-auto">
-          <h1 className="section-title leading-none mb-7">   
-            {data?.title || "Frequently Asked Questions"}
+          <h1 className="font-inter font-semibold tracking-tight text-2xl md:text-4xl text-[#212121]">
+            {data?.title || "Event Types"}
           </h1>
-          <hr className="w-full max-w-3xl mx-auto border-[#e3dbd0]" />
         </div>
       </section>
 
       <section className="max-w-7xl w-full mx-auto px-6 md:px-10 lg:px-12 pb-16 md:pb-20">
-        {data?.subtitle && (
-          <p className="text-center text-sm md:text-base text-[#6f685a] max-w-3xl mx-auto mb-10 md:mb-12">
-            {data.subtitle}
-          </p>
-        )}
+        <p className="text-center text-sm md:text-base text-[#6f685a] max-w-3xl mx-auto mb-10 md:mb-12">
+          {data?.subtitle || "From weddings to corporate events, our booths add a touch of fun and create lasting memories for every occasion."}
+        </p>
 
-        <div className="max-w-6xl mx-auto">
-          <h2 className="section-title mb-6 md:mb-8 text-[#212121]">
+        <div className="max-w-6xl mx-auto text-left">
+          <h2 className="mb-6 md:mb-8 text-[#212121] text-left font-inter font-bold tracking-tight text-2xl md:text-4xl w-full">
             General
           </h2>
 
-          <div className="border-t border-b border-[#e3dbd0] bg-transparent">
+          <div className="bg-transparent">
             {faqs.map((faq: any, faqIndex: number) => {
               const isOpen = openIndex === faqIndex;
 
@@ -105,7 +102,7 @@ export default function FAQPage() {
         )}
       </section>
 
-      <section className="mt-auto py-16 md:py-20 text-center px-6 border-t border-[#e3dbd0] bg-[#f5ebe1]">
+      <section className="mt-auto py-16 md:py-20 text-center px-6 border-t border-[#e3dbd0] bg-[#f3f1ee]">
         <h2 className="section-title mb-10 text-[#212121]">
           Still Have Questions?
         </h2>

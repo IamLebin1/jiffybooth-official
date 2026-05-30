@@ -157,17 +157,40 @@ export default function Home() {
   const brands = pageData?.brands && pageData.brands.length > 0 ? pageData.brands : [];
   const services = servicesData && servicesData.length > 0 ? servicesData : [];
   const events = eventsData && eventsData.length > 0 ? eventsData : [];
-  const eventCategories = pageData?.categories && pageData.categories.length > 0 ? pageData.categories : [];
+  const eventCategories = useMemo(() => {
+    const grouped = new Map<string, { title: string; image?: string; description?: string; count: number }>();
+
+    events.forEach((item: any) => {
+      const category = (item?.category || '').trim();
+      if (!category) return;
+
+      const existing = grouped.get(category);
+      if (existing) {
+        existing.count += 1;
+        if (!existing.image && item?.image) existing.image = item.image;
+        return;
+      }
+
+      grouped.set(category, {
+        title: category,
+        image: item?.image,
+        description: item?.description,
+        count: 1,
+      });
+    });
+
+    return Array.from(grouped.values());
+  }, [events]);
+
   const filteredPreviewEvents = useMemo(() => {
     const term = eventSearch.trim().toLowerCase();
-    if (!term) return events;
+    if (!term) return eventCategories;
 
-    return events.filter((item: any) =>
+    return eventCategories.filter((item: any) =>
       (item?.title || '').toLowerCase().includes(term) ||
-      (item?.category || '').toLowerCase().includes(term) ||
       (item?.description || '').toLowerCase().includes(term)
     );
-  }, [events, eventSearch]);
+  }, [eventCategories, eventSearch]);
 
   if (!pageData) return <div className="min-h-screen bg-white" />;
 
@@ -304,11 +327,11 @@ export default function Home() {
       <section className="py-16 md:py-20 px-6 bg-[#f4f4f4] border-t border-[#e8e3da]">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-4xl mx-auto mb-10 md:mb-12">
-            <h2 className="text-jiffy-dark font-serif font-semibold tracking-tight text-1xl md:text-3xl mb-5">
-              Discover Your Wedding Dream Team
+            <h2 className="section-title mb-4">
+              Event Types
             </h2>
             <p className="text-jiffy-dark/75 text-sm md:text-base leading-relaxed">
-              Looking for top wedding professionals? Check out our curated lists of the best wedding vendors and wedding companies.
+              From weddings to corporate events, our booths add a touch of fun and create lasting memories for every occasion.
             </p>
 
             <div className="mt-8 max-w-md mx-auto relative">
@@ -328,18 +351,49 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-7 gap-y-10">
+          <div className="md:hidden -mx-6 px-6 overflow-x-auto scrollbar-hide pb-2">
+            <div className="flex gap-4 w-max snap-x snap-mandatory">
+              {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
+                <Link
+                  key={`${item?.title || 'category'}-${index}`}
+                  href={`/our-events`}
+                  className="group block text-jiffy-dark shrink-0 w-[76vw] max-w-[320px] snap-center"
+                >
+                  <div className="relative overflow-hidden rounded-[1.7rem] aspect-[4/5] bg-stone-200">
+                    {item?.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item?.title || 'Event Category'}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="h-full w-full flex items-center justify-center px-6 text-center bg-gradient-to-br from-[#ece6de] to-[#dcd3c7]">
+                        <p className="font-serif italic text-lg text-jiffy-dark">Image Coming Soon</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <h3 className="mt-3 font-serif italic text-lg leading-tight">
+                    {item?.title || 'Untitled Category'}
+                  </h3>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-x-7 gap-y-10">
             {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
               <Link 
-                key={item?.slug || `event-${index}`}
-                href={item?.slug ? `/our-events/${item.slug}` : '/our-events'}
+                key={`${item?.title || 'category'}-${index}`}
+                href={`/our-events`}
                 className="group block text-jiffy-dark"
               >
                 <div className="relative overflow-hidden rounded-[1.7rem] aspect-[1/1] bg-stone-200">
                   {item?.image ? (
                     <Image 
                       src={item.image}
-                      alt={item?.title || 'Event Type'}
+                      alt={item?.title || 'Event Category'}
                       fill
                       className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
@@ -351,7 +405,7 @@ export default function Home() {
                 </div>
 
                 <h3 className="mt-3 font-serif italic text-xl md:text-2xl leading-tight">
-                  {item?.title || 'Untitled Event'}
+                  {item?.title || 'Untitled Category'}
                 </h3>
               </Link>
             ))}
@@ -376,7 +430,8 @@ export default function Home() {
 
       {/* --- OUR TEMPLATES SECTION --- */}
       <section id="templates" className="w-full py-8 md:py-16 scroll-mt-24 bg-slate-50">
-<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          <h2 className="section-title">
+<div className="max-w-7xl mx-auto px-6 mb-6 md:mb-16 flex justify-center">          
+          <h2 className="section-title">
             Our Templates
           </h2>
         </div>
@@ -420,6 +475,12 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* --- FOOTER CTA --- */}
+      <section className="py-24 text-center">
+        <h2 className="section-title mb-10">Ready to Book?</h2>
+        <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-[#844a39] hover:scale-105 active:scale-95 transition-all">Book Now</Link>
       </section>
 
       {/* --- USP SECTION --- */}
@@ -550,12 +611,6 @@ export default function Home() {
         )}
       </section>
 
-      {/* --- FOOTER CTA --- */}
-      <section className="py-24 text-center">
-        <h2 className="section-title mb-10">Ready to Book?</h2>
-        <Link href="/contact-us" className="inline-block bg-[#9b5744] text-white px-16 py-6 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:bg-[#844a39] hover:scale-105 active:scale-95 transition-all">Book Now</Link>
-      </section>
-
       <style jsx global>{`
         /* Template slider styles */
         .glide__slide {
@@ -642,7 +697,9 @@ export default function Home() {
         /* Our Services horizontal scroll bar */
         .services-scroll {
           scrollbar-width: thin;
-          scrollbar-color: #213244 rgba(108, 120, 146, 0.22);
+          scrollbar-color: #9b5744 rgba(218, 170, 95, 0.22);
+          /* Add a bit more space between content and the scrollbar */
+          padding-bottom: 2rem;
         }
         .services-scroll::-webkit-scrollbar {
           height: 6px;

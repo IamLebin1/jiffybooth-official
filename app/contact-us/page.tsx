@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createClient } from "next-sanity";
-import imageUrlBuilder from '@sanity/image-url';
 
 // --- SANITY CLIENT CONFIGURATION ---
 const client = createClient({
@@ -12,10 +11,29 @@ const client = createClient({
   useCdn: true,
 });
 
+type BookingStep = {
+  title?: string;
+  description?: string;
+};
+
+type ContactPageData = {
+  whatsappNumber?: string;
+  instagramUser?: string;
+  emailAddress?: string;
+  bookingTitle?: string;
+  bookingSteps?: BookingStep[];
+};
+
+type HeaderFooterSettings = {
+  whatsappSettings?: {
+    whatsappNumber?: string;
+  };
+};
+
 export default function ContactPage() {
-  const [data, setData] = useState<any>(null);
+  const [data, setData] = useState<ContactPageData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [headerFooterSettings, setHeaderFooterSettings] = useState<any>(null);
+  const [headerFooterSettings, setHeaderFooterSettings] = useState<HeaderFooterSettings | null>(null);
   const formSectionRef = useRef<HTMLDivElement | null>(null);
 
   // Form States
@@ -104,27 +122,24 @@ export default function ContactPage() {
     setTimeout(() => setStatus('idle'), 3000);
   };
 
-  if (loading) return <div className="min-h-screen bg-white" />;
+  if (loading) return <div className="min-h-screen bg-[#f3f1ee]" />;
 
   return (
-    <main className="min-h-screen bg-[#ffffff] font-inter overflow-x-hidden">
+    <main className="min-h-screen bg-[#f3f1ee] font-inter overflow-x-hidden">
       {/* --- ULTRA-COMPACT HEADER --- */}
-      <section className="bg-[#2c343f] py-6 md:py-10 px-6 sm:px-12 lg:px-16">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="section-title text-white">
-              Contact Us
-            </h1>
-            <div className="h-1 w-12 bg-blue-400 mt-1 rounded-full hidden md:block"></div>
-          </div>
-          <p className="text-gray-400 text-sm md:text-base max-w-md leading-snug md:text-right">
-            Have questions about our booths or want to check availability? Reach out through any channel below.       
+      <section className="py-6 md:py-10 px-6 sm:px-12 lg:px-16">
+        <div className="max-w-5xl mx-auto text-center">
+          <h1 className="font-inter font-semibold tracking-tight text-2xl md:text-4xl text-[#212121]">
+            Contact Us
+          </h1>
+          <p className="mt-4 font-inter text-sm md:text-base text-[#6f685a] max-w-3xl mx-auto leading-relaxed">
+            Have questions about our booths or want to check availability? Reach out through any channel below.
           </p>
         </div>
       </section>
 
       {/* --- DYNAMIC CONTACT ZONE --- */}
-      <section className="w-full bg-gray-50 py-4 md:py-6 border-b border-gray-100">
+      <section className="w-full bg-[#f3f1ee] py-4 md:py-6 border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* WhatsApp Card */}
@@ -138,7 +153,7 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">WhatsApp</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Chat with us instantly</p>
-              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm tracking-tight inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm tracking-tight inline-block w-fit md:w-auto">
                 +{data?.whatsappNumber || "60 16-396 6562"}
               </div>
             </div>
@@ -153,7 +168,7 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">Instagram</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Instant profile check</p>
-              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm inline-block w-fit md:w-auto">
                 @{data?.instagramUser || "jiffybooth"}
               </div>
             </div>
@@ -168,7 +183,7 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">Email</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Professional Enquiries</p>
-              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm truncate inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm truncate inline-block w-fit md:w-auto">
                 {data?.emailAddress || "hello@jiffybooth.com"}
               </div>
             </div>
@@ -178,7 +193,7 @@ export default function ContactPage() {
       </section>
 
       {/* --- TIMELINE AND FORM SECTION --- */}
-      <section className="max-w-6xl mx-auto py-12 md:py-16 px-6 sm:px-12 lg:px-16">
+      <section className="max-w-6xl mx-auto py-12 md:py-16 px-3 sm:px-12 lg:px-16">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
           {/* LEFT: TIMELINE */}
           <div className="flex-1 w-full relative">
@@ -189,7 +204,7 @@ export default function ContactPage() {
             <div className="relative">
               <div className="absolute left-[20px] top-2 bottom-2 w-[3px] bg-[#d2b48c] z-0"></div>
 
-              {(data?.bookingSteps || []).map((step: any, index: number) => (
+              {(data?.bookingSteps || []).map((step: BookingStep, index: number) => (
                 <div key={index} className="relative flex items-start gap-6 z-10 pb-8 last:pb-0 group">
                   <div className="flex-shrink-0 w-10 h-10 bg-[#8b4513] rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-md group-hover:scale-110 transition-transform">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
@@ -204,13 +219,13 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT: FORM */}
-          <div id="contact-form" ref={formSectionRef} className="flex-1 lg:max-w-xl scroll-mt-24">
-            <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl text-jiffy-dark border border-gray-100">
-              <h2 className="section-title mb-8 text-[#2c343f]">Quotation Request</h2>
+          <div id="contact-form" ref={formSectionRef} className="flex-1 w-full lg:max-w-xl scroll-mt-24">
+            <div className="bg-white rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-10 shadow-2xl text-jiffy-dark border border-gray-100 w-full">
+              <h2 className="section-title mb-6 md:mb-8 text-[#2c343f]">Quotation Request</h2>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Name:</label>
+              <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
+                <div className="space-y-1 md:space-y-2">
+                  <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Name:</label>
                   <input 
                     name="name"
                     type="text" 
@@ -218,13 +233,13 @@ export default function ContactPage() {
                     onChange={handleChange}
                     placeholder="Your Full Name" 
                     required
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-[#2c343f] transition-colors" 
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Tel:</label>
+                <div className="grid grid-cols-2 gap-2 md:gap-6">
+                  <div className="space-y-1 md:space-y-2 min-w-0">
+                    <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Tel:</label>
                     <input 
                       name="tel"
                       type="tel" 
@@ -232,11 +247,11 @@ export default function ContactPage() {
                       onChange={handleChange}
                       placeholder="Phone Number" 
                       required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-[#2c343f] transition-colors" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Email:</label>
+                  <div className="space-y-1 md:space-y-2 min-w-0">
+                    <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Email:</label>
                     <input 
                       name="email"
                       type="email" 
@@ -244,13 +259,13 @@ export default function ContactPage() {
                       onChange={handleChange}
                       placeholder="Email Address" 
                       required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-[#2c343f] transition-colors" 
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Event:</label>
+                <div className="space-y-1 md:space-y-2">
+                  <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Event:</label>
                   <input 
                     name="event"
                     type="text" 
@@ -258,49 +273,49 @@ export default function ContactPage() {
                     onChange={handleChange}
                     placeholder="e.g. Wedding, Corporate Launch" 
                     required
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none focus:border-[#2c343f] transition-colors" 
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Date:</label>
+                <div className="grid grid-cols-2 gap-2 md:gap-6">
+                  <div className="space-y-1 md:space-y-2 min-w-0">
+                    <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Date:</label>
                     <input 
                       name="date"
                       type="date" 
                       value={formData.date}
                       onChange={handleChange}
                       required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Time:</label>
+                  <div className="space-y-1 md:space-y-2 min-w-0">
+                    <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Time:</label>
                     <input 
                       name="time"
                       type="time" 
                       value={formData.time}
                       onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
+                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Description:</label>
+                <div className="space-y-1 md:space-y-2">
+                  <label className="font-bold block text-[11px] md:text-sm uppercase tracking-wider text-[#2c343f]">Description:</label>
                   <textarea 
                     name="description"
-                    rows={4} 
+                    rows={3} 
                     value={formData.description}
                     onChange={handleChange}
                     placeholder="Tell us more about your event details..." 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none resize-none focus:border-[#2c343f] transition-colors"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 md:p-3 text-sm outline-none resize-none focus:border-[#2c343f] transition-colors"
                   ></textarea>
                 </div>
 
                 <button 
                   type="submit"
-                  className="w-full bg-[#2c343f] text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98]"
+                    className="w-full bg-[#2c343f] text-white font-bold py-3 md:py-4 rounded-xl mt-2 md:mt-4 uppercase tracking-[0.16em] md:tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98] text-sm"
                 >
                   {status === 'success' ? 'Opening WhatsApp...' : 'Submit via WhatsApp'}
                 </button>
