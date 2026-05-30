@@ -47,8 +47,13 @@ export default function FAQPage() {
             General
           </h2>
 
+<<<<<<< HEAD
           <div className="border-t border-b border-[#e3dbd0] bg-transparent">
             {faqs.map((faq: FaqItem, faqIndex: number) => {
+=======
+          <div className="border-t border-b border-[#e3dbd0] bg-transparent">
+            {faqs.map((faq: FaqItem, faqIndex: number) => {
+>>>>>>> origin/main
               const isOpen = openIndex === faqIndex;
 
               return (

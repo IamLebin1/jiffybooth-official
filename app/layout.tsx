@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState, type ReactNode } from "react";
+import React, { useEffect, useState } from "react";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import "./globals.css";
 import { client } from "@/sanity/lib/client";
 
@@ -11,17 +12,13 @@ const inter = Inter({ subsets: ["latin"], display: "swap", variable: "--font-int
 
 type SiteSettings = {
   headerSection?: { logo?: string; navigationLinks?: { name: string; href: string }[] };
-  footerSection?: {
-    companyName?: string;
-    tagline?: string;
-    socialLinks?: { instagram?: string; tiktok?: string; xiaohongshu?: string };
-    copyrightText?: string;
-    footerLinks?: { name: string; href: string }[];
-  };
+  footerSection?: { companyName?: string; tagline?: string; socialLinks?: any; copyrightText?: string; footerLinks?: any[] };
   whatsappSettings?: { whatsappNumber?: string; defaultMessage?: string; floatingMessage?: string };
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const isContactPage = pathname === "/contact-us";
 
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
