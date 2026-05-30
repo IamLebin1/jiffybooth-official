@@ -1,6 +1,8 @@
 import { client } from '@/sanity/lib/client';
 import React from 'react';
 
+interface LegalSection { heading?: string; content?: string }
+
 export default async function PrivacyPolicy() {
   // Fetch data for the specific document with slug "privacy-policy"
   const data = await client.fetch(
@@ -19,7 +21,7 @@ export default async function PrivacyPolicy() {
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500 font-inter">
-        Please create a "Legal Page" in Sanity with the slug "privacy-policy".
+        Please create a &quot;Legal Page&quot; in Sanity with the slug &quot;privacy-policy&quot;.
       </div>
     );
   }
@@ -47,7 +49,7 @@ return (
         </div>
 
         <div className="space-y-12">
-          {data.sections?.map((item: any, index: number) => (
+          {data.sections?.map((item: LegalSection, index: number) => (
             <div key={index} className="space-y-6">
               <h2 className="section-title text-[#1c2431]">
                 {index + 1}. {item.heading}

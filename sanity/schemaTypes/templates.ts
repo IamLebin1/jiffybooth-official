@@ -1,5 +1,5 @@
 // sanity/schemaTypes/templates.ts
-export default {
+const templates = {
   name: 'templates',
   type: 'document',
   title: 'Our Templates',
@@ -20,3 +20,5 @@ export default {
     }
   ]
 }
+
+export default templates;

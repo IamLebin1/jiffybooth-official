@@ -7,7 +7,7 @@ export async function generateStaticParams() {
     `*[_type == "ourServices"]{ "slug": slug.current }`
   );
 
-  return services.map((service: any) => ({
+  return services.map((service: { slug?: string }) => ({
     slug: service.slug,
   }));
 }

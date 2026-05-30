@@ -31,7 +31,7 @@ declare module '@glidejs/glide' {
 
   export default class Glide {
     constructor(selector: string | HTMLElement, options?: GlideOptions);
-    mount(extensions?: { [key: string]: any }): Glide;
+    mount(extensions?: Record<string, unknown>): Glide;
     destroy(): void;
     update(options?: GlideOptions): void;
     go(pattern: string): void;
@@ -39,7 +39,7 @@ declare module '@glidejs/glide' {
     play(interval?: number): void;
     disable(): void;
     enable(): void;
-    on(event: string | string[], handler: (context?: any) => void): void;
+    on(event: string | string[], handler: (context?: unknown) => void): void;
     isType(type: string): boolean;
     settings: GlideOptions;
     index: number;

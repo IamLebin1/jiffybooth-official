@@ -1,20 +1,7 @@
-'use client';
-
+import { client } from "@/sanity/lib/client";
 import { useEffect, useRef, useState } from "react";
-import { createClient } from "next-sanity";
 
-// --- SANITY CLIENT CONFIGURATION ---
-const client = createClient({
-  projectId: "g8867hcl", 
-  dataset: "production",
-  apiVersion: "2024-01-01",
-  useCdn: true,
-});
-
-type BookingStep = {
-  title?: string;
-  description?: string;
-};
+type BookingStep = { title?: string; description?: string };
 
 type ContactPageData = {
   whatsappNumber?: string;
@@ -24,16 +11,9 @@ type ContactPageData = {
   bookingSteps?: BookingStep[];
 };
 
-type HeaderFooterSettings = {
-  whatsappSettings?: {
-    whatsappNumber?: string;
-  };
-};
-
 export default function ContactPage() {
   const [data, setData] = useState<ContactPageData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [headerFooterSettings, setHeaderFooterSettings] = useState<HeaderFooterSettings | null>(null);
   const formSectionRef = useRef<HTMLDivElement | null>(null);
 
   // Form States
@@ -53,15 +33,6 @@ export default function ContactPage() {
       try {
         const result = await client.fetch(`*[_type == "contactPage"][0]`);
         setData(result);
-
-        const settings = await client.fetch(
-          `*[_type == "headerFooter"][0] {
-            whatsappSettings {
-              whatsappNumber
-            }
-          }`
-        );
-        setHeaderFooterSettings(settings);
       } catch (err) {
         console.error("Sanity fetch error:", err);
       } finally {
@@ -87,18 +58,11 @@ export default function ContactPage() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // DIRECT GMAIL FUNCTION ---
-  const handleEmailClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const email = data?.emailAddress || 'hello@jiffybooth.com';
-    // This specific URL triggers Gmail's web compose form directly
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=Enquiry for Jiffy Booth`;
-    window.open(gmailUrl, '_blank');
-  };
+  // DIRECT GMAIL FUNCTION --- (removed unused helper)
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const message = `
 *Quotation Request*
 
@@ -112,20 +76,20 @@ export default function ContactPage() {
     `.trim();
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappNumber = headerFooterSettings?.whatsappSettings?.whatsappNumber || data?.whatsappNumber || '60163966562';
-    
+    const whatsappNumber = data?.whatsappNumber || '60163966562';
+
     window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
-    
+
     setFormData({ name: '', tel: '', email: '', event: '', date: '', time: '', description: '' });
     setStatus('success');
-    
+
     setTimeout(() => setStatus('idle'), 3000);
   };
 
   if (loading) return <div className="min-h-screen bg-[#f3f1ee]" />;
 
   return (
-    <main className="min-h-screen bg-[#f3f1ee] font-inter overflow-x-hidden">
+    <main className="min-h-screen bg-[#f3f1ee]">
       {/* --- ULTRA-COMPACT HEADER --- */}
       <section className="py-6 md:py-10 px-6 sm:px-12 lg:px-16">
         <div className="max-w-5xl mx-auto text-center">
@@ -153,7 +117,7 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">WhatsApp</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Chat with us instantly</p>
-              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm tracking-tight inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm tracking-tight inline-block w-fit md:w-auto">
                 +{data?.whatsappNumber || "60 16-396 6562"}
               </div>
             </div>
@@ -168,14 +132,14 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">Instagram</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Instant profile check</p>
-              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm inline-block w-fit md:w-auto">
                 @{data?.instagramUser || "jiffybooth"}
               </div>
             </div>
           </a>
 
           {/* Email Card  */}
-          <a href="#" onClick={handleEmailClick}
+          <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${data?.emailAddress || 'hello@jiffybooth.com'}&su=Enquiry for Jiffy Booth`} target="_blank" rel="noopener noreferrer"
             className="group bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-row md:flex-col items-center md:text-center gap-6">
             <div className="flex-shrink-0 bg-[#2c343f]/10 w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2c343f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -183,7 +147,7 @@ export default function ContactPage() {
             <div className="flex flex-col text-left md:text-center overflow-hidden">
               <h3 className="text-[#1c2431] text-xl font-bold">Email</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Professional Enquiries</p>
-              <div className="mt-3 px-3 py-1.5 bg-#e7cfb4 rounded-full text-[#1c2431] font-bold text-xs md:text-sm truncate inline-block w-fit md:w-auto">
+              <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm truncate inline-block w-fit md:w-auto">
                 {data?.emailAddress || "hello@jiffybooth.com"}
               </div>
             </div>

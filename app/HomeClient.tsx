@@ -4,61 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react";
-// @ts-ignore - Glide.js doesn't have built-in types
+// lucide-react icons are imported where used; no global icon map required here
 import Glide from "@glidejs/glide";
 import "@glidejs/glide/dist/css/glide.core.min.css";
 
-interface Feature {
-  title: string;
-  iconName: string;
-}
-
-interface BackdropColor {
-  name: string;
-  hex: string;
-  image: string;
-}
-
-interface FeaturedMedia {
-  mediaType: "image" | "video";
-  image?: string;
-  videoUrl?: string;
-}
-
-interface AddOn {
-  title: string;
-  description: string;
-  image: string;
-}
-
-interface SetupRequirement {
-  item: string;
-}
-
-interface CarouselItem {
-  image: string;
-  title?: string;
-  description?: string;
-}
-
-interface Section {
-  sectionType: "setup" | "backdrop" | "templates" | "addons" | "custom" | "carousel";
-  title?: string;
-  subtitle?: string;
-  backgroundColor?: string;
-  customBackgroundColor?: string;
-  layout?: "image-left" | "image-right" | "image-center";
-  content?: string;
-  image?: string;
-  description?: string;
-  requirements?: SetupRequirement[];
-  backdropColors?: BackdropColor[];
-  templates?: string[];
-  addOns?: AddOn[];
-  items?: CarouselItem[];
-  autoplay?: boolean;
-  autoplaySpeed?: number;
-}
 
 interface HomePageData {
   heroTitle: string;
@@ -69,46 +18,23 @@ interface HomePageData {
   heroVideoUrl?: string;
   heroTitleLarge?: string;
   heroSubtitle?: string;
-  templates?: Array<{ designImage?: string; title?: string }>; 
-  testimonials?: any[];
+  templates?: Array<{ designImage?: string; title?: string }>;
+  testimonials?: Testimonial[];
   brands?: Array<{ logo: string; name: string }>;
 }
 
+type Testimonial = { rating?: number; text?: string; name?: string };
+type Service = { title?: string; description?: string; slug?: string; image?: string };
+type EventItem = { title?: string; category?: string; description?: string; slug?: string; image?: string };
+
 interface HomeClientProps {
   pageData: HomePageData | null;
-  servicesData: any[];
-  eventsData: any[];
+  servicesData: Service[];
+  eventsData: EventItem[];
 }
 
-const isValidSrc = (src: any) => src && typeof src === "string" && src.trim() !== "";
+// Helpers intentionally omitted when unused to keep lint clean
 
-const getVideoEmbedUrl = (url: string) => {
-  if (!url) return "";
-  if (url.includes("youtube.com") || url.includes("youtu.be")) {
-    const videoId = url.includes("youtu.be")
-      ? url.split("youtu.be/")[1]?.split("?")[0]
-      : url.split("v=")[1]?.split("&")[0];
-    return `https://www.youtube.com/embed/${videoId}`;
-  }
-
-  if (url.includes("vimeo.com")) {
-    const videoId = url.split("vimeo.com/")[1]?.split("?")[0];
-    return `https://player.vimeo.com/video/${videoId}`;
-  }
-
-  return url;
-};
-
-const getIconForFeature = (iconName: string, className = "w-7 h-7 lg:w-12 lg:h-12") => {
-  const IconName = iconName
-    .charAt(0)
-    .toUpperCase()
-    .concat(iconName.slice(1).replace(/-([a-z])/g, (g) => g[1].toUpperCase()));
-
-  // @ts-ignore
-  const Icon = (LucideIcons as any)[IconName] || (LucideIcons as any).Camera;
-  return <Icon className={className} />;
-};
 
 export default function HomeClient({ pageData, servicesData, eventsData }: HomeClientProps) {
   const glideRef = useRef<HTMLDivElement | null>(null);
@@ -116,7 +42,7 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
   const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
   useEffect(() => {
-    if (glideRef.current && pageData?.templates?.length > 0) {
+    if (glideRef.current && Array.isArray(pageData?.templates) && pageData.templates.length > 0) {
       const glide = new Glide(glideRef.current, {
         type: "carousel",
         startAt: 0,
@@ -142,9 +68,11 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
         }, 4000);
       };
 
-      glide.on("run.before", (move: any) => {
-        if (move.direction === "<" || move.direction === ">") {
-          moveDirection = move.direction;
+      interface GlideRunMove { direction?: string }
+      glide.on("run.before", (ctx?: unknown) => {
+        const move = ctx as GlideRunMove;
+        if (move?.direction === "<" || move?.direction === ">") {
+          moveDirection = move.direction as string;
           startCustomAutoplay();
         }
       });
@@ -252,7 +180,7 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-8 xl:gap-10">
-              {servicesData.map((service: any, index: number) => {
+              {servicesData.map((service: Service, index: number) => {
                 const slug = service?.slug || `service-${index + 1}`;
                 return (
                   <Link key={index} href={`/services/${slug}`} className="group block text-jiffy-dark">
@@ -261,7 +189,7 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
                         {service.image ? (
                           <Image
                             src={service.image}
-                            alt={service.title}
+                            alt={service.title || ''}
                             width={800}
                             height={1000}
                             className="h-[320px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -310,14 +238,16 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
-            {eventsData.slice(0, 3).map((item: any) => (
+            {eventsData.slice(0, 3).map((item: EventItem) => (
               <Link
                 key={item.slug}
                 href={`/our-events/${item.slug}`}
                 className="group relative block h-[450px] md:h-[500px] overflow-hidden rounded-[2rem] shadow-sm hover:shadow-xl transition-all duration-500"
               >
                 <div className="absolute inset-0 bg-stone-200">
-                  <Image src={item.image} alt={item.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                  {item.image && (
+                    <Image src={item.image} alt={item.title || ''} fill className="object-cover transition-transform duration-1000 group-hover:scale-105" />
+                  )}
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-jiffy-dark/90 via-jiffy-dark/30 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500" />
                 <div className="absolute inset-0 p-8 md:p-10 flex flex-col justify-end text-white z-10">
@@ -351,8 +281,15 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
                 <li key={index} className="glide__slide flex justify-center items-center px-4 md:px-0">
                   <div className="template-container transition-all duration-500">
                     {item.designImage && (
-                      <img src={item.designImage} alt={item.title || `Template ${index}`} className="template-img template-shadow rounded-sm" />
-                    )}
+                            <Image
+                              src={item.designImage}
+                              alt={item.title || `Template ${index + 1}`}
+                              width={800}
+                              height={600}
+                              className="template-img template-shadow rounded-sm"
+                              priority={false}
+                            />
+                          )}
                   </div>
                 </li>
               ))}
@@ -360,16 +297,16 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
           </div>
 
           <div className="glide__arrows" data-glide-el="controls">
-            <button className="glide__arrow glide__arrow--left p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
+            <button aria-label="Previous slide" title="Previous" className="glide__arrow glide__arrow--left p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
               <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
             </button>
-            <button className="glide__arrow glide__arrow--right p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
+            <button aria-label="Next slide" title="Next" className="glide__arrow glide__arrow--right p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
               <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
             </button>
           </div>
 
           <div className="glide__bullets flex justify-center items-center gap-3 mt-12" data-glide-el="controls[nav]">
-            {pageData.templates?.map((_: any, index: number) => (
+            {pageData.templates?.map((template, index: number) => (
               <button key={index} className="glide__bullet focus:outline-none" data-glide-dir={`=${index}`} aria-label={`Go to slide ${index + 1}`}></button>
             ))}
           </div>
@@ -417,7 +354,7 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
               ref={testimonialsRowRef}
               className={`overflow-x-auto testimonial-scroll pb-8 flex flex-row nowrap gap-6 ${testimonialsCanScroll ? "justify-start" : "justify-center"}`}
             >
-              {pageData.testimonials.map((testimonial: any, i: number) => (
+              {pageData.testimonials.map((testimonial: Testimonial, i: number) => (
                 <div key={i} className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-[280px] hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div>
                     <div className="flex gap-1 mb-4">
@@ -426,7 +363,7 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
                       ))}
                     </div>
                     <div className="testimonial-text-scroll overflow-y-auto mb-6 h-[100px]">
-                      <p className="text-gray-600 text-sm italic">"{testimonial.text}"</p>
+                      <p className="text-gray-600 text-sm italic">&quot;{testimonial.text}&quot;</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -457,7 +394,9 @@ export default function HomeClient({ pageData, servicesData, eventsData }: HomeC
             <div className="flex gap-16 md:gap-32 animate-marquee-slow items-center">
               {[...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands, ...pageData.brands].map((brand, i) => (
                 <div key={i} className="flex items-center justify-center shrink-0">
-                  <img src={brand.logo} alt={brand.name} className="h-10 md:h-14 w-auto object-contain" />
+                  {brand.logo && (
+                    <Image src={brand.logo} alt={brand.name || ''} width={140} height={56} className="h-10 md:h-14 w-auto object-contain" />
+                  )}
                 </div>
               ))}
             </div>

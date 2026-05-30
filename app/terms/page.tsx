@@ -1,6 +1,8 @@
 import { client } from '@/sanity/lib/client';
 import React from 'react';
 
+interface LegalSection { heading?: string; content?: string }
+
 export default async function TermsOfService() {
   // Fetch data for the specific document with slug "terms-of-service"
   const data = await client.fetch(
@@ -20,7 +22,7 @@ export default async function TermsOfService() {
   if (!data) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500 font-inter">
-        Please create a "Legal Page" in Sanity with the slug "terms-of-service".
+        Please create a &quot;Legal Page&quot; in Sanity with the slug &quot;terms-of-service&quot;.
       </div>
     );
   }
@@ -48,7 +50,7 @@ export default async function TermsOfService() {
         </div>
 
         <div className="space-y-12">
-          {data.sections?.map((item: any, index: number) => (
+          {data.sections?.map((item: LegalSection, index: number) => (
             <div key={index} className="space-y-6">
               <h2 className="section-title text-[#1c2431]">
                 {item.heading}

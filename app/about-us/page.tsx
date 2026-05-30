@@ -1,18 +1,10 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
-import { createClient } from "next-sanity";
-import imageUrlBuilder from '@sanity/image-url';
 
-const client = createClient({
-  projectId: "g8867hcl", 
-  dataset: "production",
-  apiVersion: "2024-01-01",
-  useCdn: true,
-});
-
-const builder = imageUrlBuilder(client);
 type AboutUsDocument = {
   pageTitle?: string;
   description?: string;
@@ -23,32 +15,28 @@ type AboutUsDocument = {
   teamPhoto?: unknown;
 };
 
-function urlFor(source: unknown) {
-  return builder.image(source as never);
-}
-
 export default function AboutPage() {
   const [sanityTeam, setSanityTeam] = useState<AboutUsDocument | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTeam() {
       try {
-        const data = await client.fetch(
-          `*[_type == "aboutUs"][0]`,
-          {},
-          { cache: 'no-store' } 
-        );
+        const data = await client.fetch(`*[_type == "aboutUs"][0]`, {}, { cache: 'no-store' });
         setSanityTeam(data);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchTeam();
   }, []);
 
-  const defaultStrip = "/template2.png"; 
+  const defaultStrip = "/template2.png";
   const defaultTeamPhoto = "/Hero.png";
 
+  if (loading) return <div className="min-h-screen bg-white" />;
   if (!sanityTeam) return <div className="min-h-screen bg-white" />;
 
   return (
@@ -160,7 +148,6 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-
         </div>
       </section>
 

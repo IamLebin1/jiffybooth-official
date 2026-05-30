@@ -1,4 +1,6 @@
-export default {
+import type { Rule } from 'sanity'
+
+const headerFooter = {
   name: 'headerFooter',
   title: 'Header & Footer Settings',
   type: 'document',
@@ -14,7 +16,7 @@ export default {
           title: 'Logo',
           type: 'image',
           options: { hotspot: true },
-          validation: (rule: any) => rule.required()
+          validation: (rule: Rule) => rule.required()
         },
         {
           name: 'navigationLinks',
@@ -24,8 +26,8 @@ export default {
             {
               type: 'object',
               fields: [
-                { name: 'name', title: 'Link Name', type: 'string', validation: (rule: any) => rule.required() },
-                { name: 'href', title: 'Link URL', type: 'string', validation: (rule: any) => rule.required() }
+                { name: 'name', title: 'Link Name', type: 'string', validation: (rule: Rule) => rule.required() },
+                { name: 'href', title: 'Link URL', type: 'string', validation: (rule: Rule) => rule.required() }
               ]
             }
           ]
@@ -44,7 +46,7 @@ export default {
           title: 'Company Name',
           type: 'string',
           initialValue: 'Jiffy Booth',
-          validation: (rule: any) => rule.required()
+            validation: (rule: Rule) => rule.required()
         },
         {
           name: 'tagline',
@@ -52,7 +54,7 @@ export default {
           type: 'text',
           rows: 3,
           initialValue: '"Capturing a jiffy that lasts forever."',
-          validation: (rule: any) => rule.required()
+          validation: (rule: Rule) => rule.required()
         },
         {
           name: 'footerLinks',
@@ -61,7 +63,7 @@ export default {
           of: [
             {
               type: 'reference',
-              to: [{ type: 'ourServices' }] 
+              to: [{ type: 'ourServices' }]
             }
           ]
         },
@@ -94,19 +96,19 @@ export default {
           name: 'whatsappNumber',
           title: 'WhatsApp Number',
           type: 'string',
-          validation: (rule: any) => rule.required()
+          validation: (rule: Rule) => rule.required()
         },
         {
           name: 'defaultMessage',
           title: 'Default WhatsApp Message',
           type: 'text',
-          validation: (rule: any) => rule.required()
+          validation: (rule: Rule) => rule.required()
         },
         {
           name: 'floatingMessage',
           title: 'Floating Message Box Text',
           type: 'text',
-          validation: (rule: any) => rule.required()
+          validation: (rule: Rule) => rule.required()
         }
       ]
     }
@@ -117,3 +119,5 @@ export default {
     }
   }
 }
+
+export default headerFooter;

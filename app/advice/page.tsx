@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import Image from "next/image";
 import { useMemo, useState } from "react";
+import { Heart } from "lucide-react";
 
 const featuredArticles = [
   {
@@ -87,6 +89,12 @@ export default function AdvicePage() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
+                <button
+                  aria-label="Save article"
+                  className="absolute top-4 right-4 h-10 w-10 rounded-full bg-white flex items-center justify-center text-jiffy-dark shadow-md"
+                >
+                  <Heart size={20} strokeWidth={2.1} />
+                </button>
               </div>
               <div className="p-4 md:p-5">
                 <p className="text-jiffy-dark/60 text-[11px] md:text-sm uppercase tracking-wide mb-2 font-semibold">
