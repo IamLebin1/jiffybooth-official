@@ -356,7 +356,7 @@ export default function Home() {
               {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
                 <Link
                   key={`${item?.title || 'category'}-${index}`}
-                  href={`/our-events`}
+                  href={`/our-events?category=${encodeURIComponent(item?.title || '')}`}
                   className="group block text-jiffy-dark shrink-0 w-[76vw] max-w-[320px] snap-center"
                 >
                   <div className="relative overflow-hidden rounded-[1.7rem] aspect-[4/5] bg-stone-200">
@@ -386,7 +386,7 @@ export default function Home() {
             {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
               <Link 
                 key={`${item?.title || 'category'}-${index}`}
-                href={`/our-events`}
+                href={`/our-events?category=${encodeURIComponent(item?.title || '')}`}
                 className="group block text-jiffy-dark"
               >
                 <div className="relative overflow-hidden rounded-[1.7rem] aspect-[1/1] bg-stone-200">

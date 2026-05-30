@@ -118,39 +118,28 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
   };
 
   return (
-    <main className="min-h-screen bg-white font-inter text-black overflow-x-hidden">
+    <main className="min-h-screen bg-white font-inter text-slate-900 overflow-x-hidden">
       
       {/* Hero Section */}
-      <section className="relative w-full h-[450px] md:h-[650px] flex flex-col items-center justify-center text-center overflow-hidden">
-        {isValidSrc(heroBackgroundImage) ? (
-          <Image 
-            src={heroBackgroundImage}
-            alt={`${heroTitle || title} background`}
-            fill
-            className="object-cover brightness-[0.4]"
-            priority
-          />
-        ) : (
-          <div className="absolute inset-0 bg-slate-800" />
-        )}
-        <div className="relative z-10 px-6">
-          <Link href="/our-services" className="text-white/70 hover:text-white text-xs tracking-[0.2em] mb-6 inline-block transition-colors">
+      <section className="bg-[#f4f4f4] py-16 md:py-20 px-6 border-t border-[#e8e3da]">
+        <div className="max-w-4xl mx-auto text-center">
+          <Link href="/our-services" className="text-jiffy-dark/70 hover:text-jiffy-dark text-xs tracking-[0.2em] mb-4 inline-block transition-colors">
             ← Back to All Services
           </Link>
-          <h1 className="text-white text-5xl md:text-8xl font-bold tracking-tight mb-4">
+          <h1 className="section-title mb-4">
             {heroTitle || title} 
           </h1>
-          <p className="text-white/90 text-lg md:text-2xl max-w-2xl mx-auto font-light">
+          <p className="text-jiffy-dark/75 text-sm md:text-base leading-relaxed max-w-3xl mx-auto">
             {heroSubtitle || title}
           </p>
-          <div className="w-24 h-1.5 bg-white mx-auto mt-8 opacity-40 rounded-full" />
         </div>
       </section>
 
       {/* Featured Media Section */}
-      <section className="max-w-6xl mx-auto -mt-20 md:-mt-24 px-6 relative z-20">
-        <div className="bg-white p-3 md:p-4 rounded-3xl shadow-2xl border-8 border-white overflow-hidden transform hover:scale-[1.02] transition-transform duration-500">
-          <div className="relative aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+      <section className="bg-[#f4f4f4] pb-16 md:pb-20 px-6">
+        <div className="max-w-6xl mx-auto -mt-4 md:-mt-6">
+          <div className="bg-white p-3 md:p-4 rounded-3xl shadow-lg border border-gray-100 overflow-hidden transform hover:scale-[1.01] transition-transform duration-500">
+            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 h-[240px] md:h-[360px]">
             {featuredMedia?.mediaType === 'image' && isValidSrc(featuredMedia.image) ? (
               <Image 
                 src={featuredMedia.image!}
@@ -175,15 +164,16 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
                 </div>
               </div>
             )}
-          </div>
+            </div>
+        </div>
         </div>
       </section>
 
       {/* Features Section */}
       {features && features.length > 0 && (
-        <section className="bg-white py-24 px-6">
+        <section className="bg-white py-20 md:py-24 px-6">
           <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-5xl font-bold mb-16 text-slate-800 text-center tracking-tight">
+            <h2 className="section-title mb-14">
               What We Provide
             </h2>
             
@@ -231,8 +221,8 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
       ))}
 
       {/* Call to Action */}
-      <section className="py-24 text-center px-6 bg-gradient-to-b from-white to-gray-50 border-t border-gray-100">
-        <h2 className="text-3xl md:text-5xl font-bold text-slate-800 mb-8 tracking-tight">
+      <section className="py-20 md:py-24 text-center px-6 bg-white border-t border-gray-100">
+        <h2 className="section-title mb-8">
           {ctaTitle || "Ready to Capture the Moment?"}
         </h2>
         <Link href="/contact-us">
@@ -564,35 +554,68 @@ function AddOnsSection({ section, isValidSrc }: { section: Section; isValidSrc: 
       style={{ backgroundColor: bgColor }}
     >
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold mb-16 text-slate-800 text-center tracking-tight">
+        <h2 className="section-title mb-12 md:mb-16">
           {section.title || 'Optional Add-Ons'}
         </h2>
         {section.addOns && section.addOns.length > 0 && (
-<div className="grid grid-cols-2 md:grid-cols-3 gap-6 md:gap-10">
-            {section.addOns.map((addon, idx) => (
-              <div key={idx} className="group cursor-pointer">
-                <div className="aspect-[4/5] rounded-3xl mb-6 overflow-hidden shadow-lg transition-all duration-500 group-hover:rounded-2xl transform group-hover:scale-[0.98] relative bg-white">
-                  {isValidSrc(addon.image) ? (
-                    <Image 
-                      src={addon.image}
-                      alt={addon.title}
-                      fill
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center text-gray-200">
-                      <LucideIcons.Plus className="w-12 h-12" />
-                    </div>
-                  )}
+          <div className="addons-scrollbar overflow-x-auto pb-5">
+            <div className="flex flex-nowrap gap-6 md:gap-8 min-w-max snap-x snap-mandatory">
+              {section.addOns.map((addon, idx) => (
+                <div
+                  key={idx}
+                  className="group shrink-0 w-[46vw] max-w-[320px] md:w-[300px] lg:w-[320px] snap-start"
+                >
+                  <div className="aspect-[4/5] rounded-3xl mb-5 overflow-hidden shadow-lg transition-all duration-500 group-hover:rounded-2xl transform group-hover:scale-[0.98] relative bg-white">
+                    {isValidSrc(addon.image) ? (
+                      <Image
+                        src={addon.image}
+                        alt={addon.title}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-200">
+                        <LucideIcons.Plus className="w-12 h-12" />
+                      </div>
+                    )}
+                  </div>
+                  <h4 className="text-xl md:text-2xl font-semibold mb-3 text-slate-800 tracking-tight">
+                    {addon.title}
+                  </h4>
+                  <p className="text-gray-600 text-sm md:text-base leading-relaxed font-light">
+                    {addon.description}
+                  </p>
                 </div>
-                <h4 className="text-2xl font-bold mb-3 text-slate-800 tracking-tight">{addon.title}</h4>
-                <p className="text-gray-600 text-base leading-relaxed font-light">
-                  {addon.description}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
+
+        <style jsx>{`
+          .addons-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #1f2937 #e5e7eb;
+          }
+
+          .addons-scrollbar::-webkit-scrollbar {
+            height: 10px;
+          }
+
+          .addons-scrollbar::-webkit-scrollbar-track {
+            background: #e5e7eb;
+            border-radius: 999px;
+          }
+
+          .addons-scrollbar::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 999px;
+            border: 2px solid #e5e7eb;
+          }
+
+          .addons-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #111827;
+          }
+        `}</style>
       </div>
     </section>
   );
