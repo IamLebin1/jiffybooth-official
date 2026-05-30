@@ -138,7 +138,7 @@ export default function OurEventsPage() {
             <div className="mt-12 rounded-[2rem] border border-gray-200 bg-white p-12 text-center text-gray-500 shadow-sm">
               <Sparkles className="w-12 h-12 mx-auto text-gray-300 mb-4" />
               <h3 className="text-xl font-bold text-jiffy-dark mb-2">No event types found</h3>
-              <p>Try searching for something else, like "Wedding" or "Corporate".</p>
+              <p>Try searching for something else, like &quot;Wedding&quot; or &quot;Corporate&quot;.</p>
             </div>
           )}
         </div>
@@ -152,11 +152,11 @@ export default function OurEventsPage() {
         <p className="text-gray-500 mb-10 max-w-xl mx-auto">
           We love getting creative! Reach out to us and we can custom-build a photo booth experience specifically for your unique theme.
         </p>
-        <Link 
+          <Link 
           href="/contact-us" 
           className="inline-block bg-[#9b5744] text-white px-12 py-5 rounded-full font-bold uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
         >
-          Let's Talk
+          Let&apos;s Talk
         </Link>
       </section>
 

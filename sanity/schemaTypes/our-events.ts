@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
@@ -9,34 +10,34 @@ export default defineType({
       name: 'title',
       title: 'Event Title',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      validation: (rule: any) => rule.required(),
     }),
     defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {source: 'title'},
-      validation: (Rule) => Rule.required(),
+      validation: (rule: any) => rule.required(),
     }),
     defineField({
       name: 'category',
       title: 'Category',
       type: 'string',
-      validation: (Rule) => Rule.required(),
+      validation: (rule: any) => rule.required(),
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 4,
-      validation: (Rule) => Rule.required(),
+      validation: (rule: any) => rule.required(),
     }),
     defineField({
       name: 'image',
       title: 'Main Image',
       type: 'image',
       options: {hotspot: true},
-      validation: (Rule) => Rule.required(),
+      validation: (rule: any) => rule.required(),
     }),
     defineField({
       name: 'gallery',

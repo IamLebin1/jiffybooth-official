@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Heart } from "lucide-react";
 
 const featuredArticles = [
@@ -50,9 +51,11 @@ export default function AdvicePage() {
               className="group rounded-[2rem] overflow-hidden border border-[#ddd6cd] bg-[#f3f1ee] hover:-translate-y-1 transition-all duration-300"
             >
               <div className="relative">
-                <img
+                <Image
                   src={article.image}
                   alt={article.title}
+                  width={1400}
+                  height={800}
                   className="h-[250px] sm:h-[300px] md:h-[340px] lg:h-[360px] w-full object-cover rounded-t-[2rem]"
                 />
                 <button

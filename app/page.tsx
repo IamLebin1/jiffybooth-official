@@ -1,14 +1,10 @@
-// main landing page 
-//git test
-
 'use client'; 
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-// @ts-ignore - Bypasses type declaration error for Glide.js in Vercel production build
 import Glide from "@glidejs/glide";
-import { createClient } from "next-sanity";
-import imageUrlBuilder from '@sanity/image-url';
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import Link from 'next/link';
 // Added Star icon for the reviews
 import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react"; 
@@ -16,26 +12,30 @@ import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react
 // Glide Styles
 import "@glidejs/glide/dist/css/glide.core.min.css"; 
 
-// --- 1. SANITY CLIENT CONFIGURATION ---
-const client = createClient({
-  projectId: "g8867hcl", 
-  dataset: "production",
-  apiVersion: "2024-01-01",
-  useCdn: false,
-});
+type Brand = { name?: string; logo?: string };
+type Service = { title?: string; description?: string; slug?: string; image?: string };
+type EventItem = { title?: string; category?: string; description?: string; slug?: string; image?: string };
+type TemplateItem = { designImage?: string; title?: string };
+type Testimonial = { rating?: number; text?: string; name?: string };
 
-const builder = imageUrlBuilder(client);
-function urlFor(source: any) {
-  return builder.image(source);
-}
-
+type MainPage = {
+  heroBackgroundType?: string;
+  heroVideoUrl?: string | null;
+  heroBackgroundImage?: string | null;
+  heroLogo?: string | null;
+  heroTitle?: string;
+  heroBio?: string;
+  brands?: Brand[];
+  templates?: TemplateItem[];
+  testimonials?: Testimonial[];
+};
 
 export default function Home() {
-  const glideRef = useRef(null);
+  const glideRef = useRef<HTMLDivElement | null>(null);
   const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
-  const [pageData, setPageData] = useState<any>(null);
-  const [servicesData, setServicesData] = useState<any[]>([]);
-  const [eventsData, setEventsData] = useState<any[]>([]);
+  const [pageData, setPageData] = useState<MainPage | null>(null);
+  const [servicesData, setServicesData] = useState<Service[]>([]);
+  const [eventsData, setEventsData] = useState<EventItem[]>([]);
   const [eventSearch, setEventSearch] = useState('');
   const [testimonialsCanScroll, setTestimonialsCanScroll] = useState(false);
 
@@ -85,9 +85,8 @@ export default function Home() {
   }, []);
 
   // --- 2. TEMPLATES SLIDER INITIALIZATION ---
-  // FIXED: Ensured this is a top-level hook to fix the Runtime Error
   useEffect(() => {
-    if (glideRef.current && pageData?.templates?.length > 0) {
+    if (glideRef.current && pageData?.templates && pageData.templates.length > 0) {
       const glide = new Glide(glideRef.current, {
         type: 'carousel',
         startAt: 0,
@@ -116,9 +115,10 @@ export default function Home() {
       };
 
       
-      glide.on('run.before', (move: any) => {
-        if (move.direction === '<' || move.direction === '>') {
-          moveDirection = move.direction; 
+      glide.on('run.before', (ctx?: unknown) => {
+        const move = ctx as { direction?: string } | undefined;
+        if (move?.direction === '<' || move?.direction === '>') {
+          moveDirection = move.direction as string;
           startCustomAutoplay(); 
         }
       });
@@ -154,20 +154,18 @@ export default function Home() {
   }, [pageData?.testimonials?.length]);
 
   // Derive the brands list: fall back to an empty array if none are set in Sanity
-  const brands = pageData?.brands && pageData.brands.length > 0 ? pageData.brands : [];
-  const services = servicesData && servicesData.length > 0 ? servicesData : [];
-  const events = eventsData && eventsData.length > 0 ? eventsData : [];
-  const eventCategories = pageData?.categories && pageData.categories.length > 0 ? pageData.categories : [];
+  const brands: Brand[] = pageData?.brands && pageData.brands.length > 0 ? pageData.brands : [];
+  const services: Service[] = servicesData && servicesData.length > 0 ? servicesData : [];
   const filteredPreviewEvents = useMemo(() => {
+    const eventsLocal = eventsData && eventsData.length > 0 ? eventsData : [];
     const term = eventSearch.trim().toLowerCase();
-    if (!term) return events;
-
-    return events.filter((item: any) =>
+    if (!term) return eventsLocal;
+    return eventsLocal.filter((item: EventItem) =>
       (item?.title || '').toLowerCase().includes(term) ||
       (item?.category || '').toLowerCase().includes(term) ||
       (item?.description || '').toLowerCase().includes(term)
     );
-  }, [events, eventSearch]);
+  }, [eventsData, eventSearch]);
 
   if (!pageData) return <div className="min-h-screen bg-white" />;
 
@@ -176,13 +174,16 @@ export default function Home() {
       
         {/* --- HERO SECTION: DYNAMIC BACKGROUND --- */}
         <section className="relative w-full min-h-[80vh] md:min-h-screen flex items-center bg-white overflow-hidden">
-          <div className="absolute inset-0 z-0">
+            <div className="absolute inset-0 z-0">
             {pageData.heroBackgroundType === 'video' && pageData.heroVideoUrl ? (
               <video
                 autoPlay
                 muted
                 loop
                 playsInline
+                preload="metadata"
+                poster={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"}
+                aria-hidden="true"
                 className="absolute inset-0 w-full h-full object-cover opacity-15"
               >
                 <source src={pageData.heroVideoUrl} type="video/mp4" />
@@ -192,6 +193,7 @@ export default function Home() {
                 src={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"} 
                 alt="Hero Background"
                 fill
+                sizes="100vw"
                 className="object-cover opacity-10" 
                 priority
               />
@@ -245,7 +247,7 @@ export default function Home() {
 
             <div className="services-scroll overflow-x-auto pb-4">
               <div className="flex flex-nowrap gap-6 lg:gap-7 xl:gap-8 min-w-max">
-              {services.map((service: any, index: number) => {
+              {services.map((service: Service, index: number) => {
                 const slug = service?.slug || `service-${index + 1}`;
 
                 return (
@@ -259,7 +261,7 @@ export default function Home() {
                         {service.image ? (
                           <Image
                             src={service.image}
-                            alt={service.title}
+                            alt={service.title || ''}
                             width={800}
                             height={1000}
                             className="h-[260px] md:h-[280px] lg:h-[240px] xl:h-[260px] w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -318,18 +320,21 @@ export default function Home() {
                   <path d="m21 21-4.3-4.3" />
                 </svg>
               </span>
+              <label htmlFor="event-search" className="sr-only">Search event types</label>
               <input
+                id="event-search"
                 type="text"
                 value={eventSearch}
                 onChange={(e) => setEventSearch(e.target.value)}
                 placeholder="Search event types..."
+                aria-label="Search event types"
                 className="w-full rounded-full border border-transparent bg-[#e7e7e7] py-3 pl-11 pr-5 text-sm text-jiffy-dark outline-none transition-colors focus:border-[#c9c3bb] focus:bg-white"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-7 gap-y-10">
-            {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
+            {filteredPreviewEvents.slice(0, 8).map((item: EventItem, index: number) => (
               <Link 
                 key={item?.slug || `event-${index}`}
                 href={item?.slug ? `/our-events/${item.slug}` : '/our-events'}
@@ -384,13 +389,15 @@ export default function Home() {
         <div className="glide relative w-full overflow-visible py-2 md:py-16" ref={glideRef}>
           <div className="glide__track overflow-visible" data-glide-el="track">
             <ul className="glide__slides items-center min-h-[450px] md:min-h-[500px]">
-              {pageData.templates?.map((item: any, index: number) => (
+              {pageData.templates?.map((item: TemplateItem, index: number) => (
                 <li key={index} className="glide__slide flex justify-center items-center px-4 md:px-0">
                   <div className="template-container transition-all duration-500">
                     {item.designImage && (
-                      <img 
-                        src={urlFor(item.designImage).url()} 
+                      <Image
+                        src={urlFor(item.designImage).url()}
                         alt={item.title || `Template ${index}`}
+                        width={900}
+                        height={600}
                         className="template-img template-shadow rounded-sm"
                       />
                     )}
@@ -401,16 +408,16 @@ export default function Home() {
           </div>
 
           <div className="glide__arrows" data-glide-el="controls">
-  <button className="glide__arrow glide__arrow--left p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
+  <button aria-label="Previous slide" className="glide__arrow glide__arrow--left p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir="<">
     <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
-  <button className="glide__arrow glide__arrow--right p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
+  <button aria-label="Next slide" className="glide__arrow glide__arrow--right p-3 md:p-4 bg-jiffy-dark text-white rounded-full shadow-xl hover:scale-110 active:scale-95 transition-all" data-glide-dir=">">
     <svg className="w-4 h-4 md:w-7 md:h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M9 18l6-6-6-6"/></svg>
   </button>
 </div>
 
           <div className="glide__bullets flex justify-center items-center gap-3 mt-12" data-glide-el="controls[nav]">
-            {pageData.templates?.map((_: any, index: number) => (
+            {pageData.templates?.map((_: TemplateItem, index: number) => (
               <button
                 key={index}
                 className="glide__bullet focus:outline-none"
@@ -494,7 +501,7 @@ export default function Home() {
               ref={testimonialsRowRef}
               className={`overflow-x-auto testimonial-scroll pb-8 flex flex-row nowrap gap-6 ${testimonialsCanScroll ? 'justify-start' : 'justify-center'}`}
             >
-              {pageData.testimonials.map((testimonial: any, i: number) => (
+              {pageData.testimonials.map((testimonial: Testimonial, i: number) => (
                 <div key={i} className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-[280px] hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div>
                     <div className="flex gap-1 mb-4">
@@ -503,7 +510,7 @@ export default function Home() {
                       ))}
                     </div>
                     <div className="testimonial-text-scroll overflow-y-auto mb-6 h-[100px]">
-                      <p className="text-gray-600 text-sm italic">"{testimonial.text}"</p>
+                      <p className="text-gray-600 text-sm italic">&quot;{testimonial.text}&quot;</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
@@ -540,9 +547,11 @@ export default function Home() {
           <div className="w-full overflow-hidden relative">
             <div className="flex gap-16 md:gap-32 animate-marquee-slow items-center">
               {/* LOOP INCREASED: Duplicate 10x to ensure screen is always filled and loop is long */}
-              {[...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands].map((brand: any, i: number) => (
+              {[...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands, ...brands].map((brand: Brand, i: number) => (
                 <div key={i} className="flex items-center justify-center shrink-0">
-                  <img src={brand.logo} alt={brand.name} className="h-10 md:h-14 w-auto object-contain" />
+                  {brand.logo && (
+                    <Image src={brand.logo} alt={brand.name || ''} width={140} height={56} className="h-10 md:h-14 w-auto object-contain" />
+                  )}
                 </div>
               ))}
             </div>

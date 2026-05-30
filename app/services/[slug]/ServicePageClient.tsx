@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import Image from "next/image";
 import Link from "next/link";
 import * as LucideIcons from 'lucide-react';
-// @ts-ignore - Glide.js doesn't have built-in types
 import Glide from '@glidejs/glide';
 import '@glidejs/glide/dist/css/glide.core.min.css';
 
@@ -87,11 +86,11 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
     ctaTitle
   } = pageData;
 
-  const isValidSrc = (src: any) => src && typeof src === 'string' && src.trim() !== "";
+  const isValidSrc = (src: unknown): src is string => typeof src === 'string' && src.trim() !== "";
 
   const getIconForFeature = (iconName: string, className = "w-7 h-7 lg:w-12 lg:h-12") => {
   const IconName = iconName.charAt(0).toUpperCase() + iconName.slice(1).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
-  // @ts-ignore
+  // @ts-expect-error - expected missing types for LucideIcons
   const Icon = LucideIcons[IconName] || LucideIcons.Camera;
   return <Icon className={className} />;
 };
@@ -110,12 +109,7 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
     return url;
   };
 
-  const getBackgroundColor = (section: Section) => {
-    if (section.backgroundColor === 'custom' && section.customBackgroundColor) {
-      return section.customBackgroundColor;
-    }
-    return section.backgroundColor || '#FFFFFF';
-  };
+  // getBackgroundColor helper removed (unused) to satisfy lint
 
   return (
     <main className="min-h-screen bg-white font-inter text-black overflow-x-hidden">
@@ -247,7 +241,7 @@ export default function ServicePageClient({ pageData }: ServicePageClientProps) 
 }
 
 // Setup Section Component
-function SetupSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function SetupSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => src is string }) {
   const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor 
     ? section.customBackgroundColor 
     : section.backgroundColor || '#F9FAFB';
@@ -267,10 +261,12 @@ function SetupSection({ section, isValidSrc }: { section: Section; isValidSrc: (
         <div className="flex flex-col lg:flex-row items-stretch gap-12 lg:gap-16">
           <div className="flex-1 min-w-0 flex items-center justify-center">
             {isValidSrc(section.image) ? (
-              <div className="inline-block rounded-3xl overflow-hidden shadow-xl border-8 border-white max-w-full relative">
-                <img
+                <div className="inline-block rounded-3xl overflow-hidden shadow-xl border-8 border-white max-w-full relative">
+                <Image
                   src={section.image!}
                   alt={section.title || 'Our Set Up'}
+                  width={1200}
+                  height={800}
                   className="w-auto h-auto max-w-full max-h-[600px] object-contain"
                 />
               </div>
@@ -316,7 +312,7 @@ function SetupSection({ section, isValidSrc }: { section: Section; isValidSrc: (
 }
 
 // Backdrop Section Component
-function BackdropSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function BackdropSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => src is string }) {
   const [activeColor, setActiveColor] = useState(section.backdropColors?.[0]?.hex || "#E5E4E2");
   const activeBackdropData = section.backdropColors?.find(c => c.hex === activeColor);
 
@@ -340,8 +336,8 @@ function BackdropSection({ section, isValidSrc }: { section: Section; isValidSrc
           <div className="space-y-10">
             <div className="text-center">
               <h3 className="text-2xl md:text-4xl font-bold mb-3 text-slate-800 tracking-tight">Backdrop Selection</h3>
-              <p className="text-gray-600 text-lg max-w-2xl mx-auto font-light">
-                Choose the perfect canvas to match your event's unique aesthetic.
+                <p className="text-gray-600 text-lg max-w-2xl mx-auto font-light">
+                Choose the perfect canvas to match your event&apos;s unique aesthetic.
               </p>
             </div>
 
@@ -420,12 +416,12 @@ function BackdropSection({ section, isValidSrc }: { section: Section; isValidSrc
 }
 
 // Templates Section Component
-function TemplatesSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function TemplatesSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => src is string }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
-  const animationRef = useRef<number>();
+  const animationRef = useRef<number | null>(null);
   const autoScrollSpeed = useRef(1);
   const isPaused = useRef(false);
 
@@ -532,10 +528,12 @@ function TemplatesSection({ section, isValidSrc }: { section: Section; isValidSr
         {loopedTemplates.map((template, i) => (
           <div key={i} className="flex-shrink-0 pl-4 first:pl-6 last:pr-6">
             <div className="h-[320px] md:h-[420px] rounded-2xl shadow-lg border-8 border-white overflow-hidden bg-white pointer-events-none">
-              {isValidSrc(template) ? (
-                <img
+                {isValidSrc(template) ? (
+                <Image
                   src={template}
                   alt={`Template ${(i % section.templates!.length) + 1}`}
+                  width={800}
+                  height={1200}
                   className="h-full w-auto object-contain"
                   draggable={false}
                 />
@@ -553,7 +551,7 @@ function TemplatesSection({ section, isValidSrc }: { section: Section; isValidSr
 }
 
 // Add-Ons Section Component
-function AddOnsSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function AddOnsSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => src is string }) {
   const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor 
     ? section.customBackgroundColor 
     : section.backgroundColor || '#F9FAFB';
@@ -599,7 +597,7 @@ function AddOnsSection({ section, isValidSrc }: { section: Section; isValidSrc: 
 }
 
 // NEW: Carousel Section Component
-function CarouselSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function CarouselSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => src is string }) {
   const glideRef = useRef<HTMLDivElement>(null);
 
   const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor 
@@ -660,9 +658,11 @@ function CarouselSection({ section, isValidSrc }: { section: Section; isValidSrc
                 <div className="carousel-container transition-all duration-500 flex flex-col items-center">
                   {/* Image */}
                   {isValidSrc(item.image) && (
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.title || `Slide ${index + 1}`}
+                      width={900}
+                      height={600}
                       className="carousel-img carousel-shadow rounded-sm mb-6"
                     />
                   )}
@@ -796,7 +796,7 @@ function CarouselSection({ section, isValidSrc }: { section: Section; isValidSrc
 }
 
 // Custom Section Component
-function CustomSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: any) => boolean }) {
+function CustomSection({ section, isValidSrc }: { section: Section; isValidSrc: (src: unknown) => boolean }) {
   const bgColor = section.backgroundColor === 'custom' && section.customBackgroundColor 
     ? section.customBackgroundColor 
     : section.backgroundColor || '#FFFFFF';
@@ -818,9 +818,11 @@ function CustomSection({ section, isValidSrc }: { section: Section; isValidSrc: 
           
           {isValidSrc(section.image) && (
             <div className="mb-12 rounded-3xl overflow-hidden shadow-xl border-8 border-white">
-              <img
+              <Image
                 src={section.image!}
                 alt={section.title || 'Section image'}
+                width={1200}
+                height={800}
                 className="w-full h-auto object-cover"
               />
             </div>
@@ -854,9 +856,11 @@ function CustomSection({ section, isValidSrc }: { section: Section; isValidSrc: 
           {isValidSrc(section.image) && (
             <div className="flex-1 min-w-0">
               <div className="rounded-3xl overflow-hidden shadow-xl border-8 border-white">
-                <img
+                <Image
                   src={section.image!}
                   alt={section.title || 'Section image'}
+                  width={1200}
+                  height={800}
                   className="w-full h-auto object-cover"
                 />
               </div>

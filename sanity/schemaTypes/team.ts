@@ -1,5 +1,5 @@
 // sanity/schemaTypes/team.ts
-export default {
+const team = {
   name: 'team',
   type: 'document',
   title: 'Jiffy Team',
@@ -16,3 +16,5 @@ export default {
     
   ],
 }
+
+export default team;

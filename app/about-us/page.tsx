@@ -1,31 +1,18 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import { client } from "@/sanity/lib/client";
+import { urlFor } from "@/sanity/lib/image";
 import Image from "next/image";
-import { createClient } from "next-sanity";
-import imageUrlBuilder from '@sanity/image-url';
-
-// --- 1. SANITY CLIENT CONFIGURATION ---
-const client = createClient({
-  projectId: "g8867hcl", 
-  dataset: "production",
-  apiVersion: "2024-01-01",
-  useCdn: true, // Set to false for "live" updates
-});
-
-// --- 2. IMAGE URL BUILDER ---
-const builder = imageUrlBuilder(client);
-function urlFor(source: any) {
-  return builder.image(source);
-}
 
 export default function AboutPage() {
-  const [sanityTeam, setSanityTeam] = useState<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [sanityTeam, setSanityTeam] = useState<Record<string, any> | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchTeam() {
       try {
-        // Fetch the aboutUs document and force fresh data
         const data = await client.fetch(
           `*[_type == "aboutUs"][0]`,
           {},
@@ -34,6 +21,8 @@ export default function AboutPage() {
         setSanityTeam(data);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
+      } finally {
+        setLoading(false);
       }
     }
     fetchTeam();
@@ -43,8 +32,8 @@ export default function AboutPage() {
   const defaultStrip = "/template2.png"; 
   const defaultTeamPhoto = "/Hero.png";
 
-  // Prevent crash if data hasn't loaded yet
-  if (!sanityTeam) return <div className="min-h-screen bg-white" />;
+  if (loading) return <div className="min-h-screen bg-white" />;
+  if (!sanityTeam) return <div className="min-h-screen bg-white text-center pt-20">Page data not found.</div>;
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -56,12 +45,10 @@ export default function AboutPage() {
         <div className="flex-1 space-y-8 text-left z-10 max-w-md lg:max-w-lg">
           <h2 className="text-[#1c2431] font-bold leading-[1.1] md:leading-[0.9] tracking-tighter 
                          text-4xl sm:text-5xl md:text-[clamp(48px,6vw,96px)]">
-            {/* FIXED: Using 'pageTitle' from your schema */}
             {sanityTeam.pageTitle || "The Team Behind Your Favorite Memories"}
           </h2>
           <p className="text-gray-500 leading-relaxed 
                         text-base md:text-lg lg:text-[clamp(16px,1.2vw,20px)]">
-            {/* FIXED: Using 'description' from your schema */}
             {sanityTeam.description || "We believe that capturing the little moments are the most important part of any event."}
           </p>
         </div>
@@ -102,7 +89,7 @@ export default function AboutPage() {
                 src={sanityTeam.photoStrip3 ? urlFor(sanityTeam.photoStrip3).url() : defaultStrip} 
                 alt="Memory Strip 3" 
                 width={130} 
-                height={325}
+                height={325} 
                 className="rounded-sm shadow-xl" 
               />
             </div>
@@ -114,9 +101,6 @@ export default function AboutPage() {
       <section className="border-t border-[#eadfce] bg-white">
         <div className="max-w-3xl mx-auto px-6 md:px-8 py-16 md:py-20">
           <div className="text-center space-y-8">
-
-
-            
 
             <div className="space-y-4 text-left text-black text-[15px] md:text-base leading-[1.5]">
               <p>

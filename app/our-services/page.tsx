@@ -37,13 +37,13 @@ export default async function OurServicesPage() {
       {/* --- SERVICES GRID --- */}
       <section id="services" className="py-4 md:py-10 px-6 max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {sanityServices.map((service: any) => (
+          {sanityServices.map((service: { _id: string; title?: string; description?: string; slug?: string; image?: string; accentColor?: string }) => (
             <div key={service._id} className="group flex flex-col bg-white rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:-translate-y-2 transition-all duration-500">
               {/* Image with Accent Color */}
               <div className="relative aspect-[16/9] md:aspect-[4/3] w-full p-2 md:p-4" style={{ backgroundColor: service.accentColor || '#f5ebe0' }}>
                 <div className="relative w-full h-full overflow-hidden rounded-2xl">
                   {service.image && (
-                    <Image src={service.image} alt={service.title} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
+                    <Image src={service.image} alt={service.title || ''} fill className="object-cover group-hover:scale-110 transition-transform duration-700" />
                   )}
                 </div>
               </div>

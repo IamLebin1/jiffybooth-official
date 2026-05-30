@@ -1,110 +1,29 @@
-'use client';
+import { client } from "@/sanity/lib/client";
+import EnquiryForm from "@/components/EnquiryForm";
 
-import { useEffect, useRef, useState } from "react";
-import { createClient } from "next-sanity";
-import imageUrlBuilder from '@sanity/image-url';
+interface BookingStep { title?: string; description?: string }
 
-// --- SANITY CLIENT CONFIGURATION ---
-const client = createClient({
-  projectId: "g8867hcl", 
-  dataset: "production",
-  apiVersion: "2024-01-01",
-  useCdn: true,
-});
+export default async function ContactPage() {
+  // Fetch data server-side
+  let data = null;
+  let headerFooterSettings = null;
+  
+  try {
+    data = await client.fetch(`*[_type == "contactPage"][0]`);
+    headerFooterSettings = await client.fetch(
+      `*[_type == "headerFooter"][0] {
+        whatsappSettings {
+          whatsappNumber
+        }
+      }`
+    );
+  } catch (err) {
+    console.error("Sanity fetch error:", err);
+  }
 
-export default function ContactPage() {
-  const [data, setData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [headerFooterSettings, setHeaderFooterSettings] = useState<any>(null);
-  const formSectionRef = useRef<HTMLDivElement | null>(null);
-
-  // Form States
-  const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
-  const [formData, setFormData] = useState({
-    name: '',
-    tel: '',
-    email: '',
-    event: '',
-    date: '',
-    time: '',
-    description: ''
-  });
-
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const result = await client.fetch(`*[_type == "contactPage"][0]`);
-        setData(result);
-
-        const settings = await client.fetch(
-          `*[_type == "headerFooter"][0] {
-            whatsappSettings {
-              whatsappNumber
-            }
-          }`
-        );
-        setHeaderFooterSettings(settings);
-      } catch (err) {
-        console.error("Sanity fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (loading) return;
-    if (window.location.hash !== '#contact-form') return;
-
-    requestAnimationFrame(() => {
-      formSectionRef.current?.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    });
-  }, [loading]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  // DIRECT GMAIL FUNCTION ---
-  const handleEmailClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    const email = data?.emailAddress || 'hello@jiffybooth.com';
-    // This specific URL triggers Gmail's web compose form directly
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${email}&su=Enquiry for Jiffy Booth`;
-    window.open(gmailUrl, '_blank');
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    const message = `
-*Quotation Request*
-
-*Name:* ${formData.name}
-*Tel:* ${formData.tel}
-*Email:* ${formData.email}
-*Event:* ${formData.event}
-*Date:* ${formData.date}
-*Time:* ${formData.time || 'Not specified'}
-*Description:* ${formData.description || 'Not provided'}
-    `.trim();
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappNumber = headerFooterSettings?.whatsappSettings?.whatsappNumber || data?.whatsappNumber || '60163966562';
-    
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank');
-    
-    setFormData({ name: '', tel: '', email: '', event: '', date: '', time: '', description: '' });
-    setStatus('success');
-    
-    setTimeout(() => setStatus('idle'), 3000);
-  };
-
-  if (loading) return <div className="min-h-screen bg-white" />;
+  const whatsappNumber = headerFooterSettings?.whatsappSettings?.whatsappNumber || data?.whatsappNumber || '60163966562';
+  const emailAddress = data?.emailAddress || 'hello@jiffybooth.com';
+  const instagramUser = data?.instagramUser || 'jiffybooth';
 
   return (
     <main className="min-h-screen bg-[#ffffff] font-inter overflow-x-hidden">
@@ -128,7 +47,7 @@ export default function ContactPage() {
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-6">
           
           {/* WhatsApp Card */}
-          <a href={`https://wa.me/${data?.whatsappNumber || '60163966562'}`} target="_blank" rel="noopener noreferrer" 
+          <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" 
             className="group bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-row md:flex-col items-center md:text-center gap-6">
             
             <div className="flex-shrink-0 bg-[#25D366]/10 w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -139,13 +58,13 @@ export default function ContactPage() {
               <h3 className="text-[#1c2431] text-xl font-bold">WhatsApp</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Chat with us instantly</p>
               <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm tracking-tight inline-block w-fit md:w-auto">
-                +{data?.whatsappNumber || "60 16-396 6562"}
+                +{whatsappNumber}
               </div>
             </div>
           </a>
 
           {/* Instagram Card */}
-          <a href={`https://instagram.com/${data?.instagramUser || 'jiffybooth'}`} target="_blank" rel="noopener noreferrer" 
+          <a href={`https://instagram.com/${instagramUser}`} target="_blank" rel="noopener noreferrer" 
             className="group bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-row md:flex-col items-center md:text-center gap-6">
             <div className="flex-shrink-0 bg-[#e4405f]/10 w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#e4405f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
@@ -154,13 +73,13 @@ export default function ContactPage() {
               <h3 className="text-[#1c2431] text-xl font-bold">Instagram</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Instant profile check</p>
               <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm inline-block w-fit md:w-auto">
-                @{data?.instagramUser || "jiffybooth"}
+                @{instagramUser}
               </div>
             </div>
           </a>
 
           {/* Email Card  */}
-          <a href="#" onClick={handleEmailClick}
+          <a href={`https://mail.google.com/mail/?view=cm&fs=1&to=${emailAddress}&su=Enquiry for Jiffy Booth`} target="_blank" rel="noopener noreferrer"
             className="group bg-white p-6 md:p-8 rounded-2xl shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100 flex flex-row md:flex-col items-center md:text-center gap-6">
             <div className="flex-shrink-0 bg-[#2c343f]/10 w-14 h-14 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
               <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#2c343f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
@@ -169,7 +88,7 @@ export default function ContactPage() {
               <h3 className="text-[#1c2431] text-xl font-bold">Email</h3>
               <p className="text-gray-500 text-sm mt-1 italic">Professional Enquiries</p>
               <div className="mt-3 px-3 py-1.5 bg-gray-50 rounded-full text-[#1c2431] font-bold text-xs md:text-sm truncate inline-block w-fit md:w-auto">
-                {data?.emailAddress || "hello@jiffybooth.com"}
+                {emailAddress}
               </div>
             </div>
           </a>
@@ -189,7 +108,7 @@ export default function ContactPage() {
             <div className="relative">
               <div className="absolute left-[20px] top-2 bottom-2 w-[3px] bg-[#d2b48c] z-0"></div>
 
-              {(data?.bookingSteps || []).map((step: any, index: number) => (
+              {(data?.bookingSteps || []).map((step: BookingStep, index: number) => (
                 <div key={index} className="relative flex items-start gap-6 z-10 pb-8 last:pb-0 group">
                   <div className="flex-shrink-0 w-10 h-10 bg-[#8b4513] rounded-full flex items-center justify-center text-white text-sm font-bold border-2 border-white shadow-md group-hover:scale-110 transition-transform">
                     {index + 1 < 10 ? `0${index + 1}` : index + 1}
@@ -204,108 +123,8 @@ export default function ContactPage() {
           </div>
 
           {/* RIGHT: FORM */}
-          <div id="contact-form" ref={formSectionRef} className="flex-1 lg:max-w-xl scroll-mt-24">
-            <div className="bg-white rounded-[2rem] p-8 md:p-10 shadow-2xl text-jiffy-dark border border-gray-100">
-              <h2 className="section-title mb-8 text-[#2c343f]">Quotation Request</h2>
-              
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Name:</label>
-                  <input 
-                    name="name"
-                    type="text" 
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="Your Full Name" 
-                    required
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Tel:</label>
-                    <input 
-                      name="tel"
-                      type="tel" 
-                      value={formData.tel}
-                      onChange={handleChange}
-                      placeholder="Phone Number" 
-                      required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Email:</label>
-                    <input 
-                      name="email"
-                      type="email" 
-                      value={formData.email}
-                      onChange={handleChange}
-                      placeholder="Email Address" 
-                      required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Event:</label>
-                  <input 
-                    name="event"
-                    type="text" 
-                    value={formData.event}
-                    onChange={handleChange}
-                    placeholder="e.g. Wedding, Corporate Launch" 
-                    required
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none focus:border-[#2c343f] transition-colors" 
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Date:</label>
-                    <input 
-                      name="date"
-                      type="date" 
-                      value={formData.date}
-                      onChange={handleChange}
-                      required
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Time:</label>
-                    <input 
-                      name="time"
-                      type="time" 
-                      value={formData.time}
-                      onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none text-gray-500 focus:border-[#2c343f] transition-colors" 
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="font-bold block text-sm uppercase tracking-wider text-[#2c343f]">Description:</label>
-                  <textarea 
-                    name="description"
-                    rows={4} 
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Tell us more about your event details..." 
-                    className="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 outline-none resize-none focus:border-[#2c343f] transition-colors"
-                  ></textarea>
-                </div>
-
-                <button 
-                  type="submit"
-                  className="w-full bg-[#2c343f] text-white font-bold py-4 rounded-xl mt-4 uppercase tracking-[0.2em] hover:bg-black transition-all active:scale-[0.98]"
-                >
-                  {status === 'success' ? 'Opening WhatsApp...' : 'Submit via WhatsApp'}
-                </button>
-              </form>
-            </div>
+          <div id="contact-form" className="flex-1 lg:max-w-xl scroll-mt-24">
+            <EnquiryForm whatsappNumber={whatsappNumber} isDarkBackground={true} />
           </div>
         </div>
       </section>

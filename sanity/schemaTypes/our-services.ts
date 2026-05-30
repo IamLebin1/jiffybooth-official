@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {defineField, defineType} from 'sanity'
 
 export default defineType({
@@ -11,14 +12,14 @@ export default defineType({
       title: 'Service Title', 
       type: 'string',
       description: 'The name shown on the services listing grid.',
-      validation: Rule => Rule.required()
+      validation: (rule: any) => rule.required()
     }),
     defineField({ 
       name: 'slug', 
       title: 'Slug', 
       type: 'slug', 
       options: { source: 'title' },
-      validation: Rule => Rule.required()
+      validation: (rule: any) => rule.required()
     }),
     defineField({ 
       name: 'description', 
@@ -39,7 +40,7 @@ export default defineType({
       title: 'Display Order',
       type: 'number',
       description: 'Sort order on the main grid (1, 2, 3...)',
-      validation: Rule => Rule.required()
+      validation: (rule: any) => rule.required()
     }),
     defineField({ 
       name: 'accentColor', 
@@ -94,14 +95,14 @@ export default defineType({
           title: 'Image',
           type: 'image',
           options: { hotspot: true },
-          hidden: ({ parent }: any) => parent?.mediaType !== 'image'
+            hidden: ({ parent }) => parent?.mediaType !== 'image'
         },
         {
           name: 'videoUrl',
           title: 'Video URL',
           type: 'url',
           description: 'YouTube, Vimeo, or direct video URL',
-          hidden: ({ parent }: any) => parent?.mediaType !== 'video'
+            hidden: ({ parent }) => parent?.mediaType !== 'video'
         }
       ]
     }),
@@ -171,7 +172,7 @@ export default defineType({
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
               description: 'Enter hex code (e.g., #f5ebe0)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+                    hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'image',
@@ -247,7 +248,7 @@ export default defineType({
               name: 'customBackgroundColor',
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+              hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'backdropColors',
@@ -320,7 +321,7 @@ export default defineType({
               name: 'customBackgroundColor',
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+              hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'templates',
@@ -379,7 +380,7 @@ export default defineType({
               name: 'customBackgroundColor',
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+              hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'addOns',
@@ -448,7 +449,7 @@ export default defineType({
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
               description: 'Enter hex code (e.g., #f5ebe0)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+              hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'items',
@@ -463,7 +464,7 @@ export default defineType({
                     type: 'image', 
                     title: 'Image',
                     options: { hotspot: true },
-                    validation: (Rule: any) => Rule.required()
+                    validation: (Rule) => Rule.required()
                   },
                   { 
                     name: 'title', 
@@ -477,7 +478,7 @@ export default defineType({
                     title: 'Description',
                     rows: 2,
                     description: 'Short description (2 lines max recommended)',
-                    validation: (Rule: any) => Rule.max(200)
+                    validation: (Rule) => Rule.max(200)
                   }
                 ],
                 preview: { 
@@ -495,7 +496,7 @@ export default defineType({
                   }
                 }
               }],
-              validation: (Rule: any) => Rule.min(3).warning('At least 3 items recommended for a good carousel experience')
+              validation: (Rule) => Rule.min(3).warning('At least 3 items recommended for a good carousel experience')
             },
             {
               name: 'autoplay',
@@ -510,7 +511,7 @@ export default defineType({
               title: 'Autoplay Speed (ms)',
               description: 'Time between slides in milliseconds (e.g., 4000 = 4 seconds)',
               initialValue: 4000,
-              hidden: ({ parent }: any) => !parent?.autoplay
+              hidden: ({ parent }) => !parent?.autoplay
             }
           ],
           preview: {
@@ -564,7 +565,7 @@ export default defineType({
               name: 'customBackgroundColor',
               type: 'string',
               title: 'Custom Background Color (Hex Code)',
-              hidden: ({ parent }: any) => parent?.backgroundColor !== 'custom'
+              hidden: ({ parent }) => parent?.backgroundColor !== 'custom'
             },
             {
               name: 'layout',
@@ -600,7 +601,7 @@ export default defineType({
               media: 'image'
             },
             prepare({ title, layout, media }) {
-              const layoutLabels: any = {
+              const layoutLabels: Record<string, string> = {
                 'image-left': 'Image Left',
                 'image-right': 'Image Right',
                 'image-center': 'Image Center'

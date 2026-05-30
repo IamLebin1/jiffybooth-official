@@ -1,9 +1,10 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-// @ts-ignore - Bypasses type declaration error for Glide.js in Vercel production build
+import Image from 'next/image';
 import Glide from '@glidejs/glide';
 import imageUrlBuilder from '@sanity/image-url';
+import { SanityImageSource } from '@sanity/image-url/lib/types/types';
 import { createClient } from 'next-sanity';
 
 // Glide Styles
@@ -17,12 +18,12 @@ const client = createClient({
 });
 
 const builder = imageUrlBuilder(client);
-function urlFor(source: any) {
+function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
 interface CarouselItem {
-  image: any;
+  image: SanityImageSource;
   title?: string;
   description?: string;
 }
@@ -39,7 +40,7 @@ interface CarouselSectionProps {
 }
 
 export default function CarouselSection({ section }: CarouselSectionProps) {
-  const glideRef = useRef(null);
+  const glideRef = useRef<HTMLDivElement | null>(null);
 
   // Determine background color
   const getBgColor = () => {
@@ -103,9 +104,11 @@ export default function CarouselSection({ section }: CarouselSectionProps) {
                 <div className="carousel-container transition-all duration-500 flex flex-col items-center">
                   {/* Image */}
                   {item.image && (
-                    <img
+                    <Image
                       src={urlFor(item.image).url()}
                       alt={item.title || `Slide ${index + 1}`}
+                      width={900}
+                      height={600}
                       className="carousel-img carousel-shadow rounded-sm mb-6"
                     />
                   )}

@@ -11,7 +11,8 @@ const client = createClient({
 });
 
 export default function FAQPage() {
-  const [data, setData] = useState<any>(null);
+  interface FaqItem { question: string; answer: string }
+  const [data, setData] = useState<{ faqs?: FaqItem[]; title?: string; subtitle?: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -57,7 +58,7 @@ export default function FAQPage() {
           </h2>
 
           <div className="border-t border-b border-[#e3dbd0] bg-transparent">
-            {faqs.map((faq: any, faqIndex: number) => {
+            {faqs.map((faq: FaqItem, faqIndex: number) => {
               const isOpen = openIndex === faqIndex;
 
               return (
