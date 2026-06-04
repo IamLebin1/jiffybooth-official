@@ -7,6 +7,7 @@ import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import Link from 'next/link';
 import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react"; 
+import { eventTypes } from "./our-events/eventData";
 
 import "@glidejs/glide/dist/css/glide.core.min.css"; 
 
@@ -26,6 +27,15 @@ type MainPage = {
   brands?: Brand[];
   templates?: TemplateItem[];
   testimonials?: Testimonial[];
+};
+
+const fallbackPageData: MainPage = {
+  heroTitle: "Jiffy Booth",
+  heroBio: "Premium photo booth experiences for weddings, launches, and celebrations.",
+  heroBackgroundType: "image",
+  brands: [],
+  templates: [],
+  testimonials: [],
 };
 
 export default function Home() {
@@ -76,6 +86,9 @@ export default function Home() {
         setEventsData(data?.events || []);
       } catch (error) {
         console.error("Error fetching Sanity data:", error);
+        setPageData(fallbackPageData);
+        setServicesData([]);
+        setEventsData([]);
       }
     }
     fetchData();
@@ -148,7 +161,8 @@ export default function Home() {
   }, [pageData?.testimonials?.length]);
 
   // Keep teammate's backend logic: group events into categories
-  const brands: Brand[] = pageData?.brands && pageData.brands.length > 0 ? pageData.brands : [];
+  const page = pageData || fallbackPageData;
+  const brands: Brand[] = page.brands && page.brands.length > 0 ? page.brands : [];
   const services: Service[] = servicesData && servicesData.length > 0 ? servicesData : [];
   const events = eventsData && eventsData.length > 0 ? eventsData : [];
 
@@ -187,30 +201,28 @@ export default function Home() {
     );
   }, [eventCategories, eventSearch]);
 
-  if (!pageData) return <div className="min-h-screen bg-white" />;
-
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
       
       {/* --- HERO SECTION: DYNAMIC BACKGROUND --- */}
       <section className="relative w-full min-h-[80vh] md:min-h-screen flex items-center bg-white overflow-hidden">
         <div className="absolute inset-0 z-0">
-          {pageData.heroBackgroundType === 'video' && pageData.heroVideoUrl ? (
+          {page.heroBackgroundType === 'video' && page.heroVideoUrl ? (
             <video
               autoPlay
               muted
               loop
               playsInline
               preload="metadata"
-              poster={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"}
+              poster={page.heroBackgroundImage ? urlFor(page.heroBackgroundImage).url() : "/hero-background.jpg"}
               aria-hidden="true"
               className="absolute inset-0 w-full h-full object-cover opacity-15"
             >
-              <source src={pageData.heroVideoUrl} type="video/mp4" />
+              <source src={page.heroVideoUrl} type="video/mp4" />
             </video>
           ) : (
             <Image 
-              src={pageData.heroBackgroundImage ? urlFor(pageData.heroBackgroundImage).url() : "/hero-background.jpg"} 
+              src={page.heroBackgroundImage ? urlFor(page.heroBackgroundImage).url() : "/hero-background.jpg"} 
               alt="Hero Background"
               fill
               sizes="100vw"
@@ -224,7 +236,7 @@ export default function Home() {
           <div className="flex flex-col items-center text-center order-1 md:order-2">
             <div className="flex -mb-2 justify-center w-full">
               <Image 
-                src={pageData?.heroLogo ? urlFor(pageData.heroLogo).url() : "/jiffy-logo.png"} 
+                  src={page.heroLogo ? urlFor(page.heroLogo).url() : "/jiffy-logo.png"} 
                 alt="Jiffy Logo"
                 width={300}
                 height={150}
@@ -233,11 +245,11 @@ export default function Home() {
             </div>
             
             <h1 className="text-jiffy-dark font-bold leading-[0.7] tracking-tighter text-5xl md:text-[clamp(60px,8vw,120px)]">
-              {pageData?.heroTitle || ""}
+              {page.heroTitle || fallbackPageData.heroTitle}
             </h1>
             
             <p className="text-jiffy-dark mt-6 font-light tracking-widest max-w-md text-base md:text-[clamp(18px,1.5vw,20px)]">
-              {pageData?.heroBio || ""}
+              {page.heroBio || fallbackPageData.heroBio}
             </p>
 
             <Link
@@ -352,7 +364,7 @@ export default function Home() {
 
           {/* Your UI: image cards with descriptions, using teammate's filteredPreviewEvents (categories) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-7 gap-y-10">
-            {filteredPreviewEvents.slice(0, 8).map((item: any, index: number) => (
+            {(filteredPreviewEvents.length > 0 ? filteredPreviewEvents : eventTypes).slice(0, 8).map((item: any, index: number) => (
               <Link key={index} href={`/our-events`} className="group block">
                 <div>
                   <div className="relative aspect-square w-full rounded-[1rem] overflow-hidden">
@@ -399,7 +411,7 @@ export default function Home() {
         <div className="glide relative w-full overflow-visible py-2 md:py-16" ref={glideRef}>
           <div className="glide__track overflow-visible" data-glide-el="track">
             <ul className="glide__slides items-center min-h-[450px] md:min-h-[500px]">
-              {pageData.templates?.map((item: TemplateItem, index: number) => (
+              {page.templates?.map((item: TemplateItem, index: number) => (
                 <li key={index} className="glide__slide flex justify-center items-center px-4 md:px-0">
                   <div className="template-container transition-all duration-500">
                     {item.designImage && (
@@ -427,7 +439,7 @@ export default function Home() {
           </div>
 
           <div className="glide__bullets flex justify-center items-center gap-3 mt-12" data-glide-el="controls[nav]">
-            {pageData.templates?.map((_: TemplateItem, index: number) => (
+            {page.templates?.map((_: TemplateItem, index: number) => (
               <button
                 key={index}
                 className="glide__bullet focus:outline-none"
@@ -505,7 +517,7 @@ export default function Home() {
       </section>
 
       {/* --- TESTIMONIALS SECTION --- */}
-      {pageData.testimonials && pageData.testimonials.length > 0 && (
+      {page.testimonials && page.testimonials.length > 0 && (
         <section className="bg-slate-50 py-24 md:py-32 overflow-hidden border-y border-gray-100">
           <div className="w-full px-6 md:px-10 lg:px-16 xl:px-24">
             <div className="text-center mb-16">
@@ -517,7 +529,7 @@ export default function Home() {
               ref={testimonialsRowRef}
               className={`overflow-x-auto testimonial-scroll pb-8 flex flex-row nowrap gap-6 ${testimonialsCanScroll ? 'justify-start' : 'justify-center'}`}
             >
-              {pageData.testimonials.map((testimonial: Testimonial, i: number) => (
+              {page.testimonials.map((testimonial: Testimonial, i: number) => (
                 <div key={i} className="bg-white rounded-[2rem] shadow-sm border border-gray-100 p-6 flex flex-col justify-between flex-shrink-0 w-[280px] hover:shadow-xl transition-all duration-500 hover:-translate-y-2">
                   <div>
                     <div className="flex gap-1 mb-4">
