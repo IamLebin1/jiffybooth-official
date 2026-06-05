@@ -51,36 +51,10 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await client.fetch(
-          `{
-            "mainPage": *[_type == "mainPage"] | order(_updatedAt desc)[0] {
-              ...,
-              "heroVideoUrl": heroBackgroundVideo.asset->url,
-              "brands": brands[] {
-                name,
-                "logo": logo.asset->url
-              }
-            },
-            "services": *[_type == "ourServices"] | order(order asc) {
-              title,
-              description,
-              "slug": slug.current,
-              "image": image.asset->url
-            },
-            "events": *[_type == "ourEvents"] | order(_createdAt asc) {
-              title,
-              category,
-              description,
-              "slug": slug.current,
-              "image": image.asset->url
-            }
-          }`, 
-          {}, 
-          { 
-            next: { revalidate: 0 },
-            cache: 'no-store' 
-          }
-        );
+        const response = await fetch('/api/home-data', {
+          cache: 'no-store',
+        });
+        const data = await response.json();
         setPageData(data?.mainPage || null);
         setServicesData(data?.services || []);
         setEventsData(data?.events || []);

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { Sparkles } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { client } from "@/sanity/lib/client";
+import { eventTypes } from "./eventData";
 
 type EventListItem = {
   title: string;
@@ -29,26 +29,25 @@ function OurEventsPageContent() {
     const categoryFromQuery = searchParams.get("category");
     return categoryFromQuery ? categoryFromQuery.trim() : null;
   });
-  const [events, setEvents] = useState<EventListItem[]>([]);
+  const [events, setEvents] = useState<EventListItem[]>(() =>
+    eventTypes.map((item) => ({
+      title: item.title,
+      category: item.category,
+      description: item.description,
+      image: item.image,
+      slug: item.slug,
+    }))
+  );
 
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const data = await client
-          .withConfig({ useCdn: false })
-          .fetch(
-            `*[_type == "ourEvents"] | order(coalesce(order, 9999) asc, _createdAt asc) {
-              title,
-              category,
-              description,
-              "slug": slug.current,
-              "image": image.asset->url
-            }`,
-            {},
-            { cache: "no-store" }
-          );
+        const response = await fetch("/api/events", { cache: "no-store" });
+        const data = await response.json();
 
-        setEvents((data || []).filter((item: EventListItem) => item?.slug));
+        if (Array.isArray(data) && data.length > 0) {
+          setEvents(data.filter((item: EventListItem) => item?.slug));
+        }
       } catch (error) {
         console.error("Error fetching events:", error);
       }
