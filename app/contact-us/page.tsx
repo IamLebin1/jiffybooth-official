@@ -98,7 +98,7 @@ export default function ContactPage() {
   if (loading) return <div className="min-h-screen bg-[#f3f1ee]" />;
 
   return (
-    <main className="min-h-screen bg-[#f3f1ee] text-[#212121]">
+    <main className="min-h-screen bg-[#f3f1ee] text-[#212121] overflow-x-hidden">
       <section className="py-6 md:py-10 px-6 sm:px-12 lg:px-16">
         <div className="max-w-5xl mx-auto text-center">
           <h1 className="font-inter font-semibold tracking-tight text-2xl md:text-4xl text-[#212121]">Contact Us</h1>
@@ -166,8 +166,8 @@ export default function ContactPage() {
       <section className="max-w-6xl mx-auto py-12 md:py-16 px-3 sm:px-12 lg:px-16">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
           {/* LEFT: TIMELINE */}
-          <div className="flex-1 w-full relative">
-            <div className="absolute top-0 -left-10 text-[10rem] font-black text-gray-50 -z-10 select-none pointer-events-none uppercase">STEPS</div>
+          <div className="flex-1 w-full relative overflow-x-hidden">
+            <div className="absolute top-0 -left-10 text-[10rem] font-black text-gray-50 -z-10 select-none pointer-events-none uppercase hidden md:block">STEPS</div>
             <h2 className="section-title mb-10 text-[#a0522d]">
               {data?.bookingTitle || "How to Book?"}
             </h2>

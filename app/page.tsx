@@ -3,19 +3,26 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Glide from "@glidejs/glide";
-import { client } from "@/sanity/lib/client";
 import { urlFor } from "@/sanity/lib/image";
 import Link from 'next/link';
 import { User, Star, ShieldCheck, Heart, Calendar, Sparkles } from "lucide-react"; 
-import { eventTypes } from "./our-events/eventData";
 
 import "@glidejs/glide/dist/css/glide.core.min.css"; 
 
 type Brand = { name?: string; logo?: string };
 type Service = { title?: string; description?: string; slug?: string; image?: string };
 type EventItem = { title?: string; category?: string; description?: string; slug?: string; image?: string };
+type EventCategory = { title: string; slug: string; image?: string; description?: string; count: number };
 type TemplateItem = { designImage?: string; title?: string };
 type Testimonial = { rating?: number; text?: string; name?: string };
+
+const toEventTypeSlug = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
 
 type MainPage = {
   heroBackgroundType?: string;
@@ -42,6 +49,7 @@ export default function Home() {
   const glideRef = useRef<HTMLDivElement | null>(null);
   const testimonialsRowRef = useRef<HTMLDivElement | null>(null);
   const [pageData, setPageData] = useState<MainPage | null>(null);
+  const [loading, setLoading] = useState(true);
   const [servicesData, setServicesData] = useState<Service[]>([]);
   const [eventsData, setEventsData] = useState<EventItem[]>([]);
   const [eventSearch, setEventSearch] = useState('');
@@ -63,6 +71,8 @@ export default function Home() {
         setPageData(fallbackPageData);
         setServicesData([]);
         setEventsData([]);
+      } finally {
+        setLoading(false);
       }
     }
     fetchData();
@@ -138,12 +148,11 @@ export default function Home() {
   const page = pageData || fallbackPageData;
   const brands: Brand[] = page.brands && page.brands.length > 0 ? page.brands : [];
   const services: Service[] = servicesData && servicesData.length > 0 ? servicesData : [];
-  const events = eventsData && eventsData.length > 0 ? eventsData : [];
 
-  const eventCategories = useMemo(() => {
-    const grouped = new Map<string, { title: string; image?: string; description?: string; count: number }>();
+  const eventCategories = useMemo<EventCategory[]>(() => {
+    const grouped = new Map<string, EventCategory>();
 
-    events.forEach((item: any) => {
+    eventsData.forEach((item) => {
       const category = (item?.category || '').trim();
       if (!category) return;
 
@@ -156,6 +165,7 @@ export default function Home() {
 
       grouped.set(category, {
         title: category,
+        slug: toEventTypeSlug(category),
         image: item?.image,
         description: item?.description,
         count: 1,
@@ -163,17 +173,21 @@ export default function Home() {
     });
 
     return Array.from(grouped.values());
-  }, [events]);
+  }, [eventsData]);
 
   const filteredPreviewEvents = useMemo(() => {
     const term = eventSearch.trim().toLowerCase();
     if (!term) return eventCategories;
 
-    return eventCategories.filter((item: any) =>
+    return eventCategories.filter((item) =>
       (item?.title || '').toLowerCase().includes(term) ||
       (item?.description || '').toLowerCase().includes(term)
     );
   }, [eventCategories, eventSearch]);
+
+  if (loading) {
+    return <main className="min-h-screen bg-white font-inter overflow-x-hidden" />;
+  }
 
   return (
     <main className="min-h-screen bg-white font-inter overflow-x-hidden">
@@ -227,7 +241,7 @@ export default function Home() {
             </p>
 
             <Link
-              href="/contact-us#contact-form"
+              href="/contact-us"
               className="inline-block mt-8 px-10 py-4 rounded-full font-bold uppercase tracking-widest text-white shadow-2xl hover:scale-105 active:scale-95 transition-all"
               style={{ backgroundColor: '#9b5744' }}
             >
@@ -338,8 +352,12 @@ export default function Home() {
 
           {/* Your UI: image cards with descriptions, using teammate's filteredPreviewEvents (categories) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-7 gap-y-10">
-            {(filteredPreviewEvents.length > 0 ? filteredPreviewEvents : eventTypes).slice(0, 8).map((item: any, index: number) => (
-              <Link key={index} href={`/our-events`} className="group block">
+            {filteredPreviewEvents.slice(0, 8).map((item, index: number) => (
+              <Link
+                key={index}
+                href={`/our-events/${item?.slug || toEventTypeSlug(item?.title || "")}`}
+                className="group block"
+              >
                 <div>
                   <div className="relative aspect-square w-full rounded-[1rem] overflow-hidden">
                     {item?.image ? (
@@ -359,7 +377,7 @@ export default function Home() {
 
           {filteredPreviewEvents.length === 0 && (
             <div className="mt-10 rounded-2xl border border-[#ddd5c9] bg-white p-8 text-center text-jiffy-dark/70">
-              No matching event types found.
+              No event types found.
             </div>
           )}
 
